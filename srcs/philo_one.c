@@ -126,6 +126,11 @@ int main(int ac, char **av)
 		return (ft_error(1));
 	if (!ft_init_data(&data, ac, av))
 		return (ft_error(1));
+	if (data.n_p == 1)
+	{
+		printf("%d philosopher 0 died\n", data.time_to_die);
+		return (0);
+	}
 	if (!ft_init_ph(&ph, &data))
 		return (ft_error(2));
 	b = ph;

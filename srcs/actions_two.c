@@ -85,7 +85,7 @@ void	*philo(void *b)
 	//		return NULL;
 		if (ph->activity == THINKING)
 		{
-			if (ph->data->dead == 0 && try_unlock(ph))
+			if (ph->data->dead == 0 && ph->prev->activity != EATING && ph->next->activity != EATING && try_unlock(ph))
 			{
 				start_eating(ph);
 				while (ph->i <= ph->data->time_to_eat)
@@ -94,7 +94,7 @@ void	*philo(void *b)
 			}
 			else
 			{
-				printf("la\n");	
+			//	printf("la\n");	
 				if (ph->activity != SLEEPING)
 				{
 					if (!waiting(ph, 0))
