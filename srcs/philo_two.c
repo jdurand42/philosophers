@@ -1,4 +1,4 @@
-#include "../includes/philo_one.h"
+#include "../includes/philo_two.h"
 
 void	ft_putstr(char *s)
 {
@@ -26,6 +26,22 @@ int	ft_error(int i)
 		ft_putstr("Error while creating threads\n");
 	return (i);
 }
+/*
+sem_t	*init_forks(t_data *data)
+{
+	sem_t *forks;
+	int i;
+
+	i = 0;
+	if (!(forks = (sem_t*)malloc(data->n_p * sizeof(sem_t))))
+		return (NULL);
+	while (i < data->n_p)
+	{
+		sem_init(&forks[i], PTHREAD_PROCESS_SHARED, 1);
+		i++;
+	}
+	return (forks);
+}*/
 		
 int ft_init_data(t_data *data, int ac, char **av)
 {
@@ -36,14 +52,24 @@ int ft_init_data(t_data *data, int ac, char **av)
 	if (ac == 6)
 	{
 		data->limit = atoi(av[5]);
-		pthread_mutex_init(&data->limit_mutex, NULL);
+//		pthread_mutex_init(&data->limit_mutex, NULL);
+		data->limit_sem = sem_open("/limit_sen", O_CREAT | O_EXCL, S_IRWXU, 1);
+		if (data->limit_sem == 0)
+			return (0);
 	}
 	else
 		data->limit = -1;
 	data->dead = 0;
 	data->limit_check = 0;
 	gettimeofday(&data->time, NULL);
-	pthread_mutex_init(&data->lock, NULL);
+//	pthread_mutex_init(&data->lock, NULL);
+	sem_unlink("/lock");
+	sem_unlink("/forks");
+	sem_unlink("/limit_sem");
+	data->lock = sem_open("/lock", O_CREAT | O_EXCL, S_IRWXU, 1);
+	data->forks = sem_open("/forks", O_CREAT | O_EXCL, S_IRWXU, data->n_p);
+	if (data->lock == SEM_FAILED || data->forks == SEM_FAILED)
+		return (0);
 	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 0)
 		return (1);
 	else
@@ -69,7 +95,7 @@ int	ft_init_ph(t_ph **ph, t_data *data)
 		b->prev = b_prev;
 		b->thread = NULL;
 //		b->fork = PTHREAD_MUTEX_INITIALIZER;
-		pthread_mutex_init(&b->fork, NULL);
+//		pthread_mutex_init(&b->fork, NULL);
 		if (b_prev != 0)
 		{
 			b_prev->next = b;
@@ -118,10 +144,9 @@ int main(int ac, char **av)
 {
 	t_data	data;
 	t_ph	*ph;
-	t_ph *b;
+	t_ph 	*b;
 	int i = 0;
 	int ret;
-	printf("%d\n", ac);	
 	if (ac != 5 && ac != 6)
 		return (ft_error(1));
 	if (!ft_init_data(&data, ac, av))
@@ -130,7 +155,7 @@ int main(int ac, char **av)
 		return (ft_error(2));
 	b = ph;
 	//ft_print_datas(&data, ph);
-	printf("limit: %d\n", data.limit);
+	//printf("limit: %d\n", data.limit);
 	while (i < data.n_p)
 	{
 		ret = pthread_create(&b->thread, NULL, philo, (void*)b);
@@ -156,5 +181,8 @@ int main(int ac, char **av)
 		printf("%lf Philosopher %d has died\nEnding sim\n", get_time(data.time, time2), data.id_dead);
 	else
 		printf("%lf All philosophers have eaten at least %d times\nEnding sim\n", get_time(data.time, time2), data.limit);
+	sem_close(data.limit_sem);
+	sem_close(data.lock);
+	sem_close(data.forks);
 	return (0);
 }
