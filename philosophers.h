@@ -19,6 +19,9 @@ typedef	struct s_data
 	int time_to_die;
 	int time_to_sleep;
 	int limit;
+	int dead;
+	pthread_mutex_t lock;
+	int id_dead;
 }		t_data;
 
 
@@ -27,12 +30,15 @@ typedef struct s_ph
 	int		activity;
 	int		n;
 	int		i;
+	int		limit;
 	pthread_t 	thread;
-	pthread_mutex_t fork = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_t fork;
 	struct s_ph *prev;
 	struct s_ph *next;
 	struct s_data *data;
-}
+}		t_ph;
+
+void *philo(void *b);
 
 #endif
 

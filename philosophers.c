@@ -22,6 +22,8 @@ int	ft_error(int i)
 	}
 	else if (i == 2)
 		ft_putstr("Error on a Malloc\n");
+	else if (i == 3)
+		ft_putstr("Error while creating threads\n");
 	return (i);
 }
 		
@@ -32,9 +34,11 @@ int ft_init_data(t_data *data, int ac, char **av)
 	data->time_to_eat = atoi(av[3]);
 	data->time_to_sleep = atoi(av[4]);
 	if (ac == 6)
-		data->time_to_sleep = atoi(av[5]);
+		data->limit = atoi(av[5]);
 	else
-		data->time_to_sleep = 0;
+		data->limit = -1;
+	data->dead = 0;
+	pthread_mutex_init(&data->lock, NULL);
 	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 0)
 		return (1);
 	else
@@ -61,10 +65,12 @@ int	ft_init_ph(t_ph **ph, t_data *data)
 			return (0);
 		b->n = i;
 		b->i = 0;
-		b->activity = 4;	
+		b->activity = THINKING;	
 		b->next = 0;
 		b->prev = b_prev;
-		b->fork = mutex_mun_cul;
+		b->thread = NULL;
+//		b->fork = PTHREAD_MUTEX_INITIALIZER;
+		pthread_mutex_init(&b->fork, NULL);
 		if (b_prev != 0)
 		{
 			b_prev->next = b;
@@ -72,42 +78,72 @@ int	ft_init_ph(t_ph **ph, t_data *data)
 		if (i == 0)
 			*ph = b;
 		b_prev = b;
+		b->data = data;
 		i++;
 	}
 	if (i > 0)
+	{
 		b->next = *ph;
-	return (0);
+		(*ph)->prev = b;
+	}
+	return (1);
 }
 		
 		
+void ft_print_datas(t_data *data, t_ph *ph)
+{
+	int i = 0;
+	
+	printf("args: %d %d %d %d\n", data->n_p, data->time_to_die, data->time_to_eat, data->time_to_sleep);
+	while (i < data->n_p)
+	{
+		printf("P: %d, act: %d, i: %d\n", ph->n, ph->activity, ph->i);
+		if (ph->prev)
+			printf("%d\n", ph->prev->n);
+		i++;
+		ph = ph->next;
+	}
+}
 
 int main(int ac, char **av)
 {
 	t_data	data;
-	pthread	table;
 	t_ph	*ph;
 	t_ph *b;
 	int i = 0;
 	int ret;
-	
+	printf("%d\n", ac);	
 	if (ac != 5 && ac != 6)
 		return (ft_error(1));
-	data = NULL;
 	if (!ft_init_data(&data, ac, av))
 		return (ft_error(1));
 	ph = NULL;
-	if (!ft_init_ph(&ph, &data)
+	if (!ft_init_ph(&ph, &data))
 		return (ft_error(2));
-	while (i < data->n_p)
+	b = ph;
+	ft_print_datas(&data, ph);
+	printf("%d\n", ph->data->time_to_sleep);
+	printf("limit: %d\n", data.limit);
+	while (i < data.n_p)
 	{
-		b = ph->next;
-		ret = pthread_create (&b->thread, NULL, philo, (void*)b);
+		ret = pthread_create(&b->thread, NULL, philo, (void*)b);
+		if (ret != 0)
+			return (ft_error(3));
+		i++;
+		b = b->next;
 	}
 	i = 0;
-	while (i < data->n_p)
-	{
-		b = ph->next;
-		pthread_join(b, NULL);
+	b = ph;
+//	while (i < data.n_p)
+//	{
+//		pthread_join(b->thread, NULL);
+//		i++;
+//		b = b->next;
+//	}
+	while (data.dead != 1)
+	{	
+		continue ;
 	}
+	printf("Philosopher %d has died\nEnding sim\n", data.id_dead);
 	return (0);
 }
