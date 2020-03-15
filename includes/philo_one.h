@@ -5,12 +5,13 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <string.h>
+# include <sys/time.h>
 
 # define THINKING 1
 # define EATING 2
 # define SLEEPING 4
 # define DEAD 8
-# define TIME 1
+# define TIME 1000
 
 typedef	struct s_data
 {
@@ -22,6 +23,7 @@ typedef	struct s_data
 	int dead;
 	pthread_mutex_t lock;
 	int id_dead;
+	struct timeval time;
 }		t_data;
 
 
@@ -36,6 +38,7 @@ typedef struct s_ph
 	struct s_ph *prev;
 	struct s_ph *next;
 	struct s_data *data;
+	struct timeval time;
 }		t_ph;
 
 void *philo(void *b);

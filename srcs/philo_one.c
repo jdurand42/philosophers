@@ -1,4 +1,4 @@
-#include "philosophers.h"
+#include "../includes/philo_one.h"
 
 void	ft_putstr(char *s)
 {
@@ -38,18 +38,13 @@ int ft_init_data(t_data *data, int ac, char **av)
 	else
 		data->limit = -1;
 	data->dead = 0;
+	gettimeofday(&data->time, NULL);
 	pthread_mutex_init(&data->lock, NULL);
 	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 0)
 		return (1);
 	else
 		return (0);
 }	
-
-void	ft_init_philo(t_ph *ph, t_data *data)
-{
-	ph->i = 0;
-	ph->data = data;
-}
 
 int	ft_init_ph(t_ph **ph, t_data *data)
 {
@@ -95,6 +90,7 @@ void ft_print_datas(t_data *data, t_ph *ph)
 	int i = 0;
 	
 	printf("args: %d %d %d %d\n", data->n_p, data->time_to_die, data->time_to_eat, data->time_to_sleep);
+	printf("secs: %ld\n", data->time.tv_sec);
 	while (i < data->n_p)
 	{
 		printf("P: %d, act: %d, i: %d\n", ph->n, ph->activity, ph->i);
@@ -117,12 +113,10 @@ int main(int ac, char **av)
 		return (ft_error(1));
 	if (!ft_init_data(&data, ac, av))
 		return (ft_error(1));
-	ph = NULL;
 	if (!ft_init_ph(&ph, &data))
 		return (ft_error(2));
 	b = ph;
-	ft_print_datas(&data, ph);
-	printf("%d\n", ph->data->time_to_sleep);
+	//ft_print_datas(&data, ph);
 	printf("limit: %d\n", data.limit);
 	while (i < data.n_p)
 	{
@@ -133,17 +127,18 @@ int main(int ac, char **av)
 		b = b->next;
 	}
 	i = 0;
-	b = ph;
-//	while (i < data.n_p)
-//	{
-//		pthread_join(b->thread, NULL);
-//		i++;
-//		b = b->next;
-//	}
-	while (data.dead != 1)
-	{	
-		continue ;
+//	b = ph;
+	while (i < data.n_p)
+	{
+		pthread_join(b->thread, NULL);
+		i++;
+		b = b->next;
 	}
-	printf("Philosopher %d has died\nEnding sim\n", data.id_dead);
+//	while (data.dead != 1)
+//	{	
+//		continue ;
+//	}
+	struct timeval time2; gettimeofday(&time2, NULL);
+	printf("%ld Philosopher %d has died\nEnding sim\n", (time2.tv_sec + time2.tv_usec - data.time.tv_sec) / 1000, data.id_dead);
 	return (0);
 }
