@@ -80,11 +80,19 @@ void eating(t_ph *ph)
 	ph->i = 0;
 	ph->activity = EATING;
 	printf("Philosopher %d is EATING\n", ph->n);
+
+	if (ph->data->time_to_eat >= ph->data->time_to_die)
+	{
+		usleep(ph->data->time_to_die);
+		dying(ph);
+	}
 	usleep(ph->data->time_to_eat * TIME);
 	sem_post(ph->data->forks);
 	sem_post(ph->data->forks);
 	ph->started_eating = 0;
+
 	ph->activity = SLEEPING;
+	ph->i += ph->data->time_to_eat;
 	printf("Philosopher %d is SLEEPING\n", ph->n);
 }
 
@@ -133,7 +141,8 @@ void	*philo(t_ph *ph)
 		}
 		if (ph->activity == SLEEPING)
 		{
-			while (ph->i <= ph->data->time_to_sleep && ph->activity != DEAD)
+
+			while (ph->i <= ph->data->time_to_sleep + ph->data->time_to_eat && ph->activity != DEAD)
 			{
 				if (!waiting(ph, 0))
 					return (NULL);
