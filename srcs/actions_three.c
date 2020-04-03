@@ -3,7 +3,8 @@
 void	*dying(t_ph *ph)
 {
 	ph->activity = DEAD;
-	printf("Philosopher %d has Died\n", ph->n);
+	//printf("Philosopher %d has Died\n", ph->n);
+	ft_print(" has died\n", 0, ph->n);
 	sem_post(ph->data->deads);
 	printf("Je suis ici\n");
 	exit (0);
@@ -34,7 +35,8 @@ int	waiting(t_ph *ph, int lock)
 	if (ph->i == ph->data->time_to_eat && ph->activity == EATING)
 	{
 		ph->activity = SLEEPING;
-		printf("Philosopher %d is SLEEPING\n", ph->n);
+		//printf("Philosopher %d is SLEEPING\n", ph->n);
+		ft_print(" is SLEEPING\n", 0, ph->n);
 		sem_post(ph->data->forks);
 		sem_post(ph->data->forks);
 //		pthread_mutex_unlock(&ph->fork);
@@ -42,7 +44,7 @@ int	waiting(t_ph *ph, int lock)
 	}
 	return (1);
 }
-
+/*
 void	start_eating(t_ph *ph)
 {
 	ph->i = 0;
@@ -60,18 +62,20 @@ void	start_eating(t_ph *ph)
 //		pthread_mutex_unlock(&ph->data->limit_mutex);
 	}
 	printf("Philosopher %d has taken two fork\nPhilosopher %d is EATING\n", ph->n, ph->n);
-}
+}*/
 
 void	*try_eating(void *ph2)
 {
 	t_ph *ph = (t_ph*)ph2;
 	sem_wait(ph->data->forks);
-	printf("Philosopher %d has taken a fork\n", ph->n);
+	//printf("Philosopher %d has taken a fork\n", ph->n);
+	ft_print(" has taken a FORK\n", 0, ph->n);
 	sem_wait(ph->data->forks);
 
 	ph->started_eating = 1;
 
-	printf("Philosopher %d has taken a fork\n", ph->n);
+	//printf("Philosopher %d has taken a fork\n", ph->n);
+	ft_print(" has taken a FORK\n", 0, ph->n);
 	return (0);
 }
 
@@ -79,7 +83,8 @@ void eating(t_ph *ph)
 {
 	ph->i = 0;
 	ph->activity = EATING;
-	printf("Philosopher %d is EATING\n", ph->n);
+//	printf("Philosopher %d is EATING\n", ph->n);
+	ft_print(" is EATING\n", 0, ph->n);
 
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
@@ -98,7 +103,8 @@ void eating(t_ph *ph)
 
 	ph->activity = SLEEPING;
 	ph->i += ph->data->time_to_eat;
-	printf("Philosopher %d is SLEEPING\n", ph->n);
+//	printf("Philosopher %d is SLEEPING\n", ph->n);
+	ft_print(" is SLEEPING\n", 0, ph->n);
 }
 
 void	*philo(t_ph *ph)
@@ -155,7 +161,8 @@ void	*philo(t_ph *ph)
 					return (dying(ph));
 			}
 			ph->activity = THINKING;
-			printf("Philosopher %d is THINKING\n", ph->n);
+			//printf("Philosopher %d is THINKING\n", ph->n);
+			ft_print(" is THINKING\n", 0, ph->n);
 		}
 	}
 	return (NULL);

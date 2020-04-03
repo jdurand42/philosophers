@@ -54,4 +54,11 @@ typedef struct s_ph
 void *philo(t_ph *ph);
 double	get_time(struct timeval ini, struct timeval now);
 
+void ft_print(char *str, int timestamp, int n);
+int			ft_atoi(char const *str);
+void		ft_itoa_buff(int n, char *str);
+char		*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strdup(char const *src);
+size_t	ft_strlen(char const *str);
+
 #endif
