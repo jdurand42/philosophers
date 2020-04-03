@@ -87,6 +87,11 @@ void eating(t_ph *ph)
 		dying(ph);
 	}
 	usleep(ph->data->time_to_eat * TIME);
+
+	ph->limit += 1;
+	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
+		sem_post(ph->data->limit_sem);
+
 	sem_post(ph->data->forks);
 	sem_post(ph->data->forks);
 	ph->started_eating = 0;

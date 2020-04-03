@@ -34,6 +34,8 @@ typedef	struct s_data
 //	pthread_mutex_t limit_mutex;
 	int id_dead;
 	struct timeval time;
+	struct s_ph	*ph;
+	pthread_t limit_thread;
 }		t_data;
 
 

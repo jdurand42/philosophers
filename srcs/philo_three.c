@@ -53,6 +53,7 @@ int ft_init_data(t_data *data, int ac, char **av)
 	data->lock = sem_open("/lock", O_CREAT | O_EXCL, S_IRWXU, 1);
 	data->forks = sem_open("/forks", O_CREAT | O_EXCL, S_IRWXU, data->n_p);
 	data->deads = sem_open("/deads", O_CREAT | O_EXCL, S_IRWXU, data->n_p);
+	data->limit_sem = sem_open("/limit_sem", O_CREAT | O_EXCL, S_IRWXU, data->n_p);
 	if (data->lock == SEM_FAILED || data->forks == SEM_FAILED || data->deads == SEM_FAILED)
 		return (0);
 	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 0)
@@ -78,6 +79,7 @@ t_ph	*ft_init_ph(t_data *data)
 		ph[i].activity = THINKING;
 		ph[i].limit = 0;
 		ph[i].data = data;
+		//data->limit_sem = sem_open("/limit_sem", O_CREAT | O_EXCL, S_IRWXU, 1);
 		i++;
 	}
 	return (ph);
@@ -109,6 +111,29 @@ double	get_time(struct timeval ini, struct timeval now)
 	return (now_ms);
 }
 
+void *check_limit(void *data2)
+{
+	t_data *data = (t_data*)data2;
+	int i;
+
+	i = 0;
+	while (i < data->n_p)
+	{
+		sem_wait(data->limit_sem);
+		i++;
+	}
+	i = 0;
+	while (i < data->n_p)
+	{
+		kill(data->ph[i].pid, SIGKILL);
+		printf("process %d killed\n", i);
+		i++;
+	}
+	printf("All philosophers have eaten at least %d times\n", data->limit);
+	exit(0);
+	return (0);
+}
+
 int main(int ac, char **av)
 {
 	t_data	data;
@@ -124,11 +149,19 @@ int main(int ac, char **av)
 		return (ft_error(2));
 
 	i = 0;
-
+	data.ph = ph;
 	while (i < data.n_p)
 	{
 		sem_wait(data.deads);
 		printf("%d\n", i);
+		i++;
+	}
+
+	i = 0;
+
+	while (i < data.n_p)
+	{
+		sem_wait(data.limit_sem);
 		i++;
 	}
 
@@ -152,6 +185,11 @@ int main(int ac, char **av)
 	}
 	i = 0;
 	usleep(0);
+
+	if (data.limit > 0)
+		pthread_create(&data.limit_thread, NULL, check_limit, (void*)&data);
+
+	// check if dead;
 	while (1)
 	{
 		sem_wait(data.deads);
@@ -187,5 +225,6 @@ int main(int ac, char **av)
 	sem_close(data.limit_sem);
 	sem_close(data.lock);
 	sem_close(data.forks);
+	sem_close(data.deads);
 	return (0);
 }
