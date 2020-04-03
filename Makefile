@@ -5,7 +5,7 @@ SRCS_ONE	=	srcs/philo_one.c srcs/actions_one.c
 
 SRCS_TWO	=	srcs/philo_two.c srcs/actions_two.c
 
-SRCS_THREE	=	srcs/philo_three.c srcs/actions_one.c
+SRCS_THREE	=	srcs/philo_three.c srcs/actions_three.c
 
 CC		=	gcc
 

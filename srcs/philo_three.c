@@ -1,4 +1,4 @@
-#include "../includes/philo_two.h"
+#include "../includes/philo_three.h"
 
 void	ft_putstr(char *s)
 {
@@ -11,7 +11,7 @@ void	ft_putstr(char *s)
 		i++;
 	}
 }
-	
+
 
 int	ft_error(int i)
 {
@@ -26,23 +26,7 @@ int	ft_error(int i)
 		ft_putstr("Error while creating threads\n");
 	return (i);
 }
-/*
-sem_t	*init_forks(t_data *data)
-{
-	sem_t *forks;
-	int i;
 
-	i = 0;
-	if (!(forks = (sem_t*)malloc(data->n_p * sizeof(sem_t))))
-		return (NULL);
-	while (i < data->n_p)
-	{
-		sem_init(&forks[i], PTHREAD_PROCESS_SHARED, 1);
-		i++;
-	}
-	return (forks);
-}*/
-		
 int ft_init_data(t_data *data, int ac, char **av)
 {
 	data->n_p = atoi(av[1]);
@@ -59,77 +43,61 @@ int ft_init_data(t_data *data, int ac, char **av)
 	}
 	else
 		data->limit = -1;
-	data->dead = 0;
 	data->limit_check = 0;
 	gettimeofday(&data->time, NULL);
 //	pthread_mutex_init(&data->lock, NULL);
 	sem_unlink("/lock");
 	sem_unlink("/forks");
 	sem_unlink("/limit_sem");
+	sem_unlink("/deads");
 	data->lock = sem_open("/lock", O_CREAT | O_EXCL, S_IRWXU, 1);
 	data->forks = sem_open("/forks", O_CREAT | O_EXCL, S_IRWXU, data->n_p);
-	if (data->lock == SEM_FAILED || data->forks == SEM_FAILED)
+	data->deads = sem_open("/deads", O_CREAT | O_EXCL, S_IRWXU, data->n_p);
+	if (data->lock == SEM_FAILED || data->forks == SEM_FAILED || data->deads == SEM_FAILED)
 		return (0);
 	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 0)
 		return (1);
 	else
 		return (0);
-}	
+}
 
-int	ft_init_ph(t_ph **ph, t_data *data)
+t_ph	*ft_init_ph(t_data *data)
 {
 	int	i;
-	t_ph 	*b;
-	t_ph	*b_prev;
+	t_ph	*ph;
 
 	i = 0;
-	b_prev = NULL;
+	if (!(ph = (t_ph*)malloc(data->n_p * sizeof(t_ph))))
+		return (NULL);
 	while (i < data->n_p)
 	{
-		if (!(b = (t_ph*)malloc(sizeof(t_ph)))) // penser a free si mallox foireux
-			return (0);
-		b->n = i;
-		b->i = 0;
-		b->activity = THINKING;	
-		b->next = 0;
-		b->prev = b_prev;
-		b->thread = NULL;
-		b->limit = 0;
-//		b->fork = PTHREAD_MUTEX_INITIALIZER;
-//		pthread_mutex_init(&b->fork, NULL);
-		if (b_prev != 0)
-		{
-			b_prev->next = b;
-		} 
-		if (i == 0)
-			*ph = b;
-		b_prev = b;
-		b->data = data;
+//		if (!(ph[i] = (t_ph*)malloc(sizeof(t_ph)))) // penser a free si mallox foireux
+//			return (NULL);
+		ph[i].n = i;
+		ph[i].i = 0;
+		ph[i].activity = THINKING;
+		ph[i].limit = 0;
+		ph[i].data = data;
 		i++;
 	}
-	if (i > 0)
-	{
-		b->next = *ph;
-		(*ph)->prev = b;
-	}
-	return (1);
+	return (ph);
 }
-		
-		
+
+
 void ft_print_datas(t_data *data, t_ph *ph)
 {
 	int i = 0;
-	
+
 	printf("args: %d %d %d %d\n", data->n_p, data->time_to_die, data->time_to_eat, data->time_to_sleep);
 	printf("secs: %ld\n", data->time.tv_sec);
-	while (i < data->n_p)
+	/*while (i < data->n_p)
 	{
 		printf("P: %d, act: %d, i: %d\n", ph->n, ph->activity, ph->i);
 		if (ph->prev)
 			printf("%d\n", ph->prev->n);
 		i++;
 		ph = ph->next;
-	}
+	}*/
 }
 
 double	get_time(struct timeval ini, struct timeval now)
@@ -146,42 +114,76 @@ int main(int ac, char **av)
 	t_data	data;
 	t_ph	*ph;
 	t_ph 	*b;
-	int i = 0;
+	int i;
 	int ret;
 	if (ac != 5 && ac != 6)
 		return (ft_error(1));
 	if (!ft_init_data(&data, ac, av))
 		return (ft_error(1));
-	if (!ft_init_ph(&ph, &data))
+	if (!(ph = ft_init_ph(&data)))
 		return (ft_error(2));
-	b = ph;
-	//ft_print_datas(&data, ph);
-	//printf("limit: %d\n", data.limit);
+
+	i = 0;
+
 	while (i < data.n_p)
 	{
-		ret = pthread_create(&b->thread, NULL, philo, (void*)b);
-		if (ret != 0)
-			return (ft_error(3));
+		sem_wait(data.deads);
+		printf("%d\n", i);
 		i++;
-		b = b->next;
+	}
+
+	i = 0;
+
+	while (i < data.n_p)
+	{
+		if ((ph[i].pid = fork()) == 0)
+		{
+			printf("process %d created\n", i);
+			philo(&ph[i]);
+			printf("Fork %d ended\n", i);
+			exit(0);
+		}
+		else if (ph[i].pid < 0)
+		{
+			printf("Error while forking\n");
+			return (1);
+		}
+		i++;
 	}
 	i = 0;
-//	b = ph;
-	while (i < data.n_p)
+	usleep(0);
+	while (1)
+	{
+		sem_wait(data.deads);
+		printf("ici\n");
+		while (i < data.n_p)
+		{
+			kill(ph[i].pid, SIGKILL);
+			printf("process %d killed\n", i);
+			i++;
+		}
+		printf("Simulation over\n");
+		sem_close(data.limit_sem);
+		sem_close(data.lock);
+		sem_close(data.forks);
+		sem_close(data.deads);
+		return (0);
+	}
+	/*while (i < data.n_p)
 	{
 		pthread_join(b->thread, NULL);
 		i++;
 		b = b->next;
-	}
+	}*/
 //	while (data.dead != 1)
-//	{	
+//	{
 //		continue ;
 //	}
-	struct timeval time2; gettimeofday(&time2, NULL);
+/*	struct timeval time2; gettimeofday(&time2, NULL);
 	if (data.dead == 1)
 		printf("%lf Philosopher %d has died\nEnding sim\n", get_time(data.time, time2), data.id_dead);
 	else
-		printf("%lf All philosophers have eaten at least %d times\nEnding sim\n", get_time(data.time, time2), data.limit);
+		printf("%lf All philosophers have eaten at least %d times\nEnding sim\n", get_time(data.time, time2), data.limit);*/
 	sem_close(data.limit_sem);
 	sem_close(data.lock);
 	sem_close(data.forks);

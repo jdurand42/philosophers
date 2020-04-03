@@ -68,6 +68,7 @@ int	ft_init_ph(t_ph **ph, t_data *data)
 		b->next = 0;
 		b->prev = b_prev;
 		b->thread = NULL;
+		b->limit = 0;
 //		b->fork = PTHREAD_MUTEX_INITIALIZER;
 		pthread_mutex_init(&b->fork, NULL);
 		if (b_prev != 0)
@@ -146,17 +147,18 @@ int main(int ac, char **av)
 	}
 	i = 0;
 //	b = ph;
-	while (i < data.n_p)
-	{
-		pthread_join(b->thread, NULL);
-		i++;
-		b = b->next;
-	}
-//	while (data.dead != 1)
-//	{	
-//		continue ;
+//	while (i < data.n_p)
+//	{
+//		pthread_join(b->thread, NULL);
+//		i++;
+//		b = b->next;
 //	}
+	while (data.dead != 1 && data.limit_check < data.n_p)
+	{	
+		continue ;
+	}
 	struct timeval time2; gettimeofday(&time2, NULL);
+	usleep(2000);
 	if (data.dead == 1)
 		printf("%lf Philosopher %d has died\nEnding sim\n", get_time(data.time, time2), data.id_dead);
 	else

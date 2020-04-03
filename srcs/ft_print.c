@@ -1,0 +1,5 @@
+
+
+void	ft_print()
+{
+	
