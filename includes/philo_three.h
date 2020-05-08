@@ -26,13 +26,13 @@ typedef	struct s_data
 	int time_to_sleep;
 	int limit;
 	int limit_check;
-	sem_t	*lock;
 	sem_t	*limit_sem;
 	sem_t	*forks;
 	sem_t	*deads;
-//	pthread_mutex_t lock;
-//	pthread_mutex_t limit_mutex;
+	sem_t	*dead_lock;
+	sem_t	*output;
 	int id_dead;
+
 	struct timeval time;
 	struct s_ph	*ph;
 	pthread_t limit_thread;
@@ -46,19 +46,18 @@ typedef struct s_ph
 	int		i;
 	int		limit;
 	int 	started_eating;
+	int		fork;
 	pid_t 	pid;
 	struct s_data *data;
-	struct timeval time;
 }		t_ph;
 
 void *philo(t_ph *ph);
-double	get_time(struct timeval ini, struct timeval now);
+long	get_time(struct timeval ini, struct timeval now);
 
-void ft_print(char *str, int timestamp, int n);
-int			ft_atoi(char const *str);
-void		ft_itoa_buff(int n, char *str);
-char		*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strdup(char const *src);
+void 	ft_print(t_ph *ph);
+int		ft_atoi(char const *str);
+void	ft_putstr(char *s);
+char	*ft_itoa(int n);
 size_t	ft_strlen(char const *str);
 
 #endif
