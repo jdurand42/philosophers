@@ -1,7 +1,7 @@
 
 NAME		=	philo_one
 
-SRCS_ONE	=	srcs/philo_one.c srcs/actions_one.c
+SRCS_ONE	=	srcs/philo1/philo_one.c srcs/philo1/actions_one.c srcs/philo1/utils.c
 
 SRCS_TWO	=	srcs/philo2/philo_two.c srcs/philo2/actions_two.c srcs/philo2/utils.c
 
