@@ -6,14 +6,16 @@ void ft_print(t_ph *ph)
 	char	*b;
 
 	gettimeofday(&now, NULL);
+	if (ph->data->over == 1)
+		return ;
 	pthread_mutex_lock(&ph->data->output);
 	b = ft_itoa(get_time(ph->data->time, now));
 	ft_putstr(b);
-	//free(b);
+	free(b);
 	ft_putstr(" ms: ");
 	b = ft_itoa(ph->n + 1);
 	ft_putstr(b);
-	//free(b);
+	free(b);
 	if (ph->activity == THINKING && ph->has_a_fork == 0)
 		ft_putstr(" is THINKING\n");
 	else if (ph->activity == EATING)

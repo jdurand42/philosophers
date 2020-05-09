@@ -21,18 +21,7 @@ int init_mutex(t_data *data)
 
 	i = 0;
 	ret = 0;
-/*	if (!(data->forks = malloc(data->n_p * sizeof(pthread_mutex_t))))
-		return (0);
-	while (i < data->n_p)
-	{
-		printf("%d\n", i);
-		ret = pthread_mutex_init(data->forks[i], NULL);
-		if (ret != 0)
-			return (0);
 
-		i++;
-	}*/
-	//data->deads = sem_open("/deads", O_CREAT | O_EXCL, S_IRWXU, 1);
 	if (pthread_mutex_init(&data->dead_lock, NULL) ||
 	pthread_mutex_init(&data->limit_lock , NULL) ||
 	pthread_mutex_init(&data->output, NULL))
@@ -96,22 +85,28 @@ void *check_limit(void *data2)
 	int i;
 
 	i = 0;
-	while (1)
+	while (i < data->n_p)
 	{
-		if (data->limit_check >= data->limit)
-			break ;
+		if (data->ph[i].limit >= data->limit)
+			i++;
+		if (data->over == 1)
+			return (NULL);
 	}
-	printf("\n\n\n\n");
 	pthread_mutex_lock(&data->output);
 	ft_putstr("All philosophers have eaten enough time\n");
+	pthread_mutex_unlock(&data->output);
+	pthread_mutex_lock(&data->dead_lock);
 	data->over = 1;
+	pthread_mutex_unlock(&data->dead_lock);
 	// free all ph;
 	return (0);
 }
 
 int safe_exit(t_data *data)
 {
+	usleep(20000);
 	free(data->ph);
+	while (1);
 	return (0);
 }
 
@@ -149,9 +144,16 @@ int main(int ac, char **av)
 	gettimeofday(&data.time, NULL);
 	if (!threading(&data))
 		return (safe_exit(&data));
-	while (data.over != 1)
-		continue ;
-	ft_putstr("Simulation over\n");
+/*	while (data.over != 1)
+		continue ;*/
+	i = 0;
+	while (i < data.n_p)
+	{
+		pthread_join(data.ph[i].thread, NULL);
+		i++;
+	}
+//	pthread_mutex_lock(&data.output);
+	//ft_putstr("Simulation over\n");
 	return (safe_exit(&data));
 		// free ph
 		//break ;

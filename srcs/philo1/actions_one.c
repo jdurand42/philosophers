@@ -5,14 +5,20 @@ void	dying(t_ph *ph)
 	pthread_mutex_lock(&ph->data->dead_lock);
 	ph->activity = DEAD;
 	ft_print(ph);
-	pthread_mutex_lock(&ph->data->output);
+//	pthread_mutex_lock(&ph->data->output);
 	ph->data->over = 1;
+	pthread_mutex_unlock(&ph->data->dead_lock);
 }
 
-void	waiting(t_ph *ph)
+int	waiting(t_ph *ph)
 {
+	if (ph->data->over == 1)
+	{
+		return (0);
+	}
 	usleep(TIME);
 	ph->i += 1;
+	return (1);
 }
 
 int fork_priority_1(int n, int n_max)
@@ -63,22 +69,28 @@ void	*try_eating(void *ph2)
 	return (0);
 }
 
-void eating(t_ph *ph)
+int 	eating(t_ph *ph)
 {
 	ph->i = 0;
 	ph->activity = EATING;
 	ft_print(ph);
-/*	if (ph->data->time_to_eat >= ph->data->time_to_die)
+	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
-		usleep(ph->data->time_to_die);
+		usleep(ph->data->time_to_die * 1000);
+		pthread_mutex_unlock(&ph->data->ph[fork_priority_1(ph->n, ph->data->n_p)].forks);
+		pthread_mutex_unlock(&ph->data->ph[fork_priority_2(ph->n, ph->data->n_p)].forks);
 		dying(ph);
-	}*/
+		return (0);
+	}
+	if (ph->data->over == 1)
+	{
+		pthread_mutex_unlock(&ph->data->ph[fork_priority_1(ph->n, ph->data->n_p)].forks);
+		pthread_mutex_unlock(&ph->data->ph[fork_priority_2(ph->n, ph->data->n_p)].forks);
+		return (0);
+	}
 	usleep(ph->data->time_to_eat * TIME);
 	ph->limit += 1;
-	pthread_mutex_lock(&ph->data->limit_lock);
-	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
-		ph->data->limit_check += 1;
-	pthread_mutex_unlock(&ph->data->limit_lock);
+	//pthread_mutex_unlock(&ph->data->limit_lock);
 	pthread_mutex_unlock(&ph->data->ph[fork_priority_1(ph->n, ph->data->n_p)].forks);
 	pthread_mutex_unlock(&ph->data->ph[fork_priority_2(ph->n, ph->data->n_p)].forks);
 	ph->has_a_fork = 0;
@@ -86,13 +98,17 @@ void eating(t_ph *ph)
 	ph->activity = SLEEPING;
 	ph->i += ph->data->time_to_eat;
 	ft_print(ph);
+	return (1);
 }
 
 int sleeping(t_ph *ph)
 {
 	while (ph->i <= ph->data->time_to_sleep + ph->data->time_to_eat && ph->activity != DEAD)
 	{
-		waiting(ph);
+		if (!(waiting(ph)))
+		{
+			return (0);
+		}
 		if (ph->i >= ph->data->time_to_die)
 		{
 			dying(ph);
@@ -100,7 +116,7 @@ int sleeping(t_ph *ph)
 		}
 	}
 	ph->activity = THINKING;
-		ft_print(ph);
+	ft_print(ph);
 	return (1);
 }
 
@@ -110,7 +126,7 @@ void	*philo(void *b)
 	t_ph	*ph;
 
 	ph = (t_ph*)b;
-	while (1 && ph->data->over == 0)
+	while (ph->data->over == 0)
 	{
 		if (ph->activity == THINKING)
 		{
@@ -119,23 +135,33 @@ void	*philo(void *b)
 			{
 				if (ph->started_eating == 1)
 				{
-					eating(ph);
+					if (!eating(ph))
+					{
+						printf("%d\n", ph->n);
+						return (NULL);
+					}
 					break ;
 				}
 				else
 				{
-					waiting(ph);
+					if (!(waiting(ph)))
+					{
+						printf("%d\n", ph->n);
+						return (NULL);
+					}
 					if (ph->i >= ph->data->time_to_die)
 					{
 						dying(ph);
-						return (0);
+						printf("%d\n", ph->n);
+						return (NULL);
 					}
 				}
 			}
 		}
 		if (ph->activity == SLEEPING)
 			if (!sleeping(ph))
-				return (0);
+				return (NULL);
 	}
-	return (0);
+	printf("%d\n", ph->n);
+	return (NULL);
 }
