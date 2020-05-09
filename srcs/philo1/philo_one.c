@@ -55,7 +55,6 @@ int ft_init_data(t_data *data, int ac, char **av)
 	}
 	else
 		data->limit = -1;
-	gettimeofday(&data->time, NULL);
 	if (!init_mutex(data))
 		return (0);
 	data->over = 0;
@@ -102,6 +101,7 @@ void *check_limit(void *data2)
 		if (data->limit_check >= data->limit)
 			break ;
 	}
+	printf("\n\n\n\n");
 	pthread_mutex_lock(&data->output);
 	ft_putstr("All philosophers have eaten enough time\n");
 	data->over = 1;
@@ -137,6 +137,8 @@ int main(int ac, char **av)
 	t_data	data;
 	int i;
 
+
+	/// PROBLEM ON LIMIT_CHECK WITH > 6
 	if (ac != 5 && ac != 6)
 		return (ft_error(1));
 	if (!ft_init_data(&data, ac, av))
@@ -144,6 +146,7 @@ int main(int ac, char **av)
 	if (!(data.ph = ft_init_ph(&data)))
 		return (ft_error(2));
 	i = 0;
+	gettimeofday(&data.time, NULL);
 	if (!threading(&data))
 		return (safe_exit(&data));
 	while (data.over != 1)
