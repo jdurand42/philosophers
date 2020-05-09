@@ -26,6 +26,7 @@ typedef	struct s_data
 	int time_to_sleep;
 	int limit;
 	int limit_check;
+	int over;
 	sem_t	*limit_sem;
 	sem_t	*forks;
 	sem_t	*deads;
@@ -48,6 +49,8 @@ typedef struct s_ph
 	int 	started_eating;
 	int		fork;
 	pid_t 	pid;
+	struct timeval start;
+	struct timeval end;
 	struct s_data *data;
 }		t_ph;
 

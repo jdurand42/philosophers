@@ -16,7 +16,6 @@ int	ft_error(int i)
 
 void init_sems(t_data *data)
 {
-	sem_unlink("/lock");
 	sem_unlink("/forks");
 	sem_unlink("/limit_sem");
 	sem_unlink("/deads");
@@ -43,8 +42,8 @@ int ft_init_data(t_data *data, int ac, char **av)
 	}
 	else
 		data->limit = -1;
-	gettimeofday(&data->time, NULL);
 	init_sems(data);
+	data->over = 0;
 	if (data->output == SEM_FAILED || data->forks == SEM_FAILED ||
 	data->deads == SEM_FAILED
 	|| data->limit_sem == SEM_FAILED || data->output == SEM_FAILED)
@@ -87,6 +86,8 @@ void *check_limit(void *data2)
 	data = (t_data*)data2;
 	while (i < data->n_p)
 	{
+		if (data->over == 1)
+			return (NULL);
 		sem_wait(data->limit_sem);
 		i++;
 	}
@@ -120,6 +121,12 @@ void safe_exit(t_data *data)
 	sem_close(data->deads);
 	sem_close(data->dead_lock);
 	sem_close(data->output);
+	sem_close(data->limit_sem);
+	sem_unlink("/forks");
+	sem_unlink("/limit_sem");
+	sem_unlink("/deads");
+	sem_unlink("/dead_lock");
+	sem_unlink("/output");
 	free(data->ph);
 	exit(0);
 }
@@ -163,10 +170,12 @@ int main(int ac, char **av)
 		return (ft_error(2));
 	i = 0;
 	prepare_sems(&data);
+	gettimeofday(&data.time, NULL);
 	forking(&data);
 	while (1)
 	{
 		sem_wait(data.deads);
+		data.over = 1;
 		while (i < data.n_p)
 		{
 			kill(data.ph[i].pid, SIGKILL);
