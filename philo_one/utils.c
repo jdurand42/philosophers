@@ -2,14 +2,9 @@
 
 void ft_print(t_ph *ph)
 {
-	struct timeval now;
+ 	struct timeval now;
 	char	*b;
 
-	if (ph->data->init == 0)
-	{
-	 	gettimeofday(&ph->data->time, NULL);
-		ph->data->init += 1;
-	}
 	gettimeofday(&now, NULL);
 	if (ph->data->over == 1)
 		return ;

@@ -71,6 +71,7 @@ t_ph	*ft_init_ph(t_data *data)
 		ph[i].data = data;
 		ph[i].has_a_fork = 0;
 		ph[i].started_eating = 0;
+		ph[i].starved = 0;
 		ph[i].fork = 0;
 		if (pthread_mutex_init(&ph[i].forks, NULL) != 0)
 			return (NULL);
@@ -142,7 +143,7 @@ int main(int ac, char **av)
 	if (!(data.ph = ft_init_ph(&data)))
 		return (ft_error(2));
 	i = 0;
-	gettimeofday(&data.time, NULL);
+//	gettimeofday(&data.time, NULL);
 	if (!threading(&data))
 		return (safe_exit(&data));
 /*	while (data.over != 1)

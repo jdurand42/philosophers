@@ -48,11 +48,14 @@ typedef struct s_ph
 	int		i;
 	int		limit;
 	int 	started_eating;
+	int		starved;
 	int		has_a_fork;
 	int		fork;
 	pthread_mutex_t forks;
 	pthread_t thread;
 	struct s_data *data;
+	struct timeval start;
+	struct timeval end;
 }		t_ph;
 
 void *philo(void *ph);
