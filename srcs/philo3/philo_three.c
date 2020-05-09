@@ -71,7 +71,7 @@ t_ph	*ft_init_ph(t_data *data)
 		ph[i].limit = 0;
 		ph[i].data = data;
 		ph[i].fork = 0;
-		ph[i].started_eating = 0
+		ph[i].started_eating = 0;
 		i++;
 	}
 	return (ph);

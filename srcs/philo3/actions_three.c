@@ -34,7 +34,7 @@ void eating(t_ph *ph)
 	ft_print(ph);
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
-		usleep(ph->data->time_to_die);
+		usleep(ph->data->time_to_die * TIME);
 		dying(ph);
 	}
 	usleep(ph->data->time_to_eat * TIME);

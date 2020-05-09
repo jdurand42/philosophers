@@ -57,8 +57,18 @@ void	*try_eating(void *ph2)
 	pthread_mutex_lock(&ph->data->ph[fork_priority_1(ph->n, ph->data->n_p)].forks);
 	ph->has_a_fork = 1;
 	ft_print(ph);
+	/*if (ph->data->over == 1)
+	{
+		pthread_mutex_unlock(&ph->data->ph[fork_priority_1(ph->n, ph->data->n_p)].forks);
+		return (0);
+	}*/
 	pthread_mutex_lock(&ph->data->ph[fork_priority_2(ph->n, ph->data->n_p)].forks);
-
+/*	if (ph->data->over == 1)
+	{
+		pthread_mutex_unlock(&ph->data->ph[fork_priority_1(ph->n, ph->data->n_p)].forks);
+		pthread_mutex_unlock(&ph->data->ph[fork_priority_2(ph->n, ph->data->n_p)].forks);
+		return (0);
+	}*/
 	ph->has_a_fork = 1;
 	ft_print(ph);
 //	ph->has_a_fork = 1;
@@ -136,23 +146,16 @@ void	*philo(void *b)
 				if (ph->started_eating == 1)
 				{
 					if (!eating(ph))
-					{
-						printf("%d\n", ph->n);
 						return (NULL);
-					}
 					break ;
 				}
 				else
 				{
 					if (!(waiting(ph)))
-					{
-						printf("%d\n", ph->n);
 						return (NULL);
-					}
 					if (ph->i >= ph->data->time_to_die)
 					{
 						dying(ph);
-						printf("%d\n", ph->n);
 						return (NULL);
 					}
 				}
@@ -162,6 +165,5 @@ void	*philo(void *b)
 			if (!sleeping(ph))
 				return (NULL);
 	}
-	printf("%d\n", ph->n);
 	return (NULL);
 }

@@ -49,7 +49,7 @@ int ft_init_data(t_data *data, int ac, char **av)
 	|| data->limit_sem == SEM_FAILED || data->output == SEM_FAILED)
 		return (0);
 	data->over = 0;
-	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 0)
+	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 1)
 		return (1);
 	else
 		return (0);
@@ -92,8 +92,10 @@ void *check_limit(void *data2)
 	i = 0;
 
 	sem_wait(data->output);
+	data->over = 1;
 	ft_putstr("All philosophers have eaten enough time\n");
 	sem_post(data->deads);
+	sem_post(data->output);
 	// free all ph;
 	return (0);
 }
@@ -119,10 +121,15 @@ void prepare_sems(t_data *data)
 
 int safe_exit(t_data *data)
 {
-/*	sem_close(data->forks);
+	int i;
+
+	i = 0;
+	while (i < data->n_p)
+		pthread_join(data->ph[i++].thread, NULL);
+	sem_close(data->forks);
 	sem_close(data->deads);
 	sem_close(data->dead_lock);
-	sem_close(data->output);*/
+	sem_close(data->output);
 	free(data->ph);
 	return (0);
 }

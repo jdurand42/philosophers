@@ -47,7 +47,7 @@ int ft_init_data(t_data *data, int ac, char **av)
 	if (!init_mutex(data))
 		return (0);
 	data->over = 0;
-	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 0)
+	if (data->time_to_die > 0 && data->time_to_eat > 0 && data->time_to_sleep > 0 && data->n_p > 1)
 		return (1);
 	else
 		return (0);
@@ -106,7 +106,7 @@ int safe_exit(t_data *data)
 {
 	usleep(20000);
 	free(data->ph);
-	while (1);
+//	while (1);
 	return (0);
 }
 

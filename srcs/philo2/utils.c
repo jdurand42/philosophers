@@ -5,15 +5,17 @@ void ft_print(t_ph *ph)
 	struct timeval now;
 	char	*b;
 
+	if (ph->data->over == 1)
+		return ;
 	gettimeofday(&now, NULL);
 	sem_wait(ph->data->output);
 	b = ft_itoa(get_time(ph->data->time, now));
 	ft_putstr(b);
-	//free(b);
+	free(b);
 	ft_putstr(" ms: ");
 	b = ft_itoa(ph->n + 1);
 	ft_putstr(b);
-	//free(b);
+	free(b);
 	if (ph->activity == THINKING && ph->fork == 0)
 		ft_putstr(" is THINKING\n");
 	else if (ph->activity == EATING)

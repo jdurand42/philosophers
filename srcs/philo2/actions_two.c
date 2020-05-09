@@ -7,12 +7,16 @@ void	dying(t_ph *ph)
 	ft_print(ph);
 	ph->data->over = 1;
 	sem_post(ph->data->deads);
+	sem_post(ph->data->dead_lock);
 }
 
-void	waiting(t_ph *ph)
+int	waiting(t_ph *ph)
 {
+	if (ph->data->over == 1)
+		return (0);
 	usleep(TIME);
 	ph->i += 1;
+	return (1);
 }
 
 void	*try_eating(void *ph2)
@@ -28,15 +32,18 @@ void	*try_eating(void *ph2)
 	return (0);
 }
 
-void eating(t_ph *ph)
+int eating(t_ph *ph)
 {
 	ph->i = 0;
 	ph->activity = EATING;
 	ft_print(ph);
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
-		usleep(ph->data->time_to_die);
+		usleep(ph->data->time_to_die * TIME);
+		sem_post(ph->data->forks);
+		sem_post(ph->data->forks);
 		dying(ph);
+		return (0);
 	}
 	usleep(ph->data->time_to_eat * TIME);
 	ph->limit += 1;
@@ -49,13 +56,15 @@ void eating(t_ph *ph)
 	ph->activity = SLEEPING;
 	ph->i += ph->data->time_to_eat;
 	ft_print(ph);
+	return (1);
 }
 
 int sleeping(t_ph *ph)
 {
 	while (ph->i <= ph->data->time_to_sleep + ph->data->time_to_eat && ph->activity != DEAD)
 	{
-		waiting(ph);
+		if (!waiting(ph))
+			return (0);
 		if (ph->i >= ph->data->time_to_die)
 		{
 			dying(ph);
@@ -63,7 +72,7 @@ int sleeping(t_ph *ph)
 		}
 	}
 	ph->activity = THINKING;
-		ft_print(ph);
+	ft_print(ph);
 	return (1);
 }
 
@@ -73,7 +82,7 @@ void	*philo(void *b)
 	t_ph	*ph;
 
 	ph = (t_ph*)b;
-	while (1 && ph->data->over == 0)
+	while (ph->data->over == 0)
 	{
 		if (ph->activity == THINKING)
 		{
@@ -82,23 +91,25 @@ void	*philo(void *b)
 			{
 				if (ph->started_eating == 1)
 				{
-					eating(ph);
+					if (!eating(ph))
+						return (NULL);
 					break ;
 				}
 				else
 				{
-					waiting(ph);
+					if (!(waiting(ph)))
+						return (NULL);
 					if (ph->i >= ph->data->time_to_die)
 					{
 						dying(ph);
-						return (0);
+						return (NULL);
 					}
 				}
 			}
 		}
 		if (ph->activity == SLEEPING)
 			if (!sleeping(ph))
-				return (0);
+				return (NULL);
 	}
-	return (0);
+	return (NULL);
 }
