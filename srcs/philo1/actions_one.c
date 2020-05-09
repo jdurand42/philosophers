@@ -2,9 +2,10 @@
 
 void	dying(t_ph *ph)
 {
-	pthread_mutex_lock(ph->data->dead_lock);
+	pthread_mutex_lock(&ph->data->dead_lock);
 	ph->activity = DEAD;
 	ft_print(ph);
+	pthread_mutex_lock(&ph->data->output);
 	ph->data->over = 1;
 }
 
@@ -14,19 +15,33 @@ void	waiting(t_ph *ph)
 	ph->i += 1;
 }
 
+int fork_priority(int n, int n_max)
+{
+	if (n == 0)
+		return (n_max - 1);
+	else
+		return (n - 1);
+}
+
 void	*try_eating(void *ph2)
 {
 	t_ph *ph = (t_ph*)ph2;
 
-	if (ph->n > 0)
-		pthread_mutex_lock(ph->data->ph[ph->n - 1].forks);
-	else
-		pthread_mutex_lock(ph->data->ph[ph->data->n_p - 1].forks);
+	while (ph->data->ph[fork_priority(ph->n, ph->data->n_p)].fork == 1 ||
+	ph->data->ph[ph->n].fork == 1)
+		continue ;
+	pthread_mutex_lock(&ph->data->ph[fork_priority(ph->n, ph->data->n_p)].forks);
+	ph->data->ph[fork_priority(ph->n, ph->data->n_p)].fork = 1;
 	ph->has_a_fork = 1;
 	ft_print(ph);
-	pthread_mutex_lock(ph->data->ph[ph->n].forks);
+	pthread_mutex_lock(&ph->data->ph[ph->n].forks);
+	ph->data->ph[ph->n].fork = 1;
+	fork_priority(ph->n, ph->data->n_p);
 	ph->has_a_fork = 1;
 	ft_print(ph);
+//	ph->has_a_fork = 1;
+//	ft_print(ph);
+
 	ph->started_eating = 1;
 	//ft_print(ph);
 	return (0);
@@ -44,16 +59,15 @@ void eating(t_ph *ph)
 	}
 	usleep(ph->data->time_to_eat * TIME);
 	ph->limit += 1;
-	pthread_mutex_lock(ph->data->limit_lock);
+	pthread_mutex_lock(&ph->data->limit_lock);
 	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
 		ph->data->limit_check +=1;
-	pthread_mutex_unlock(ph->data->limit_lock);
-	if (ph->n > 0)
-		pthread_mutex_unlock(ph->data->ph[ph->data->n_p - 1].forks);
-	else
-		pthread_mutex_unlock(ph->data->ph[ph->n - 1].forks);
-	pthread_mutex_unlock(ph->data->ph[ph->n].forks);
-	ph->has_a_fork= 0;
+	pthread_mutex_unlock(&ph->data->limit_lock);
+	pthread_mutex_unlock(&ph->data->ph[fork_priority(ph->n, ph->data->n_p)].forks);
+	ph->data->ph[fork_priority(ph->n, ph->data->n_p)].fork = 0;
+	pthread_mutex_unlock(&ph->data->ph[ph->n].forks);
+	ph->data->ph[ph->n].fork = 0;
+	ph->has_a_fork = 0;
 	ph->started_eating = 0;
 	ph->activity = SLEEPING;
 	ph->i += ph->data->time_to_eat;

@@ -11,7 +11,7 @@ void ft_print(t_ph *ph)
 	ft_putstr(b);
 	//free(b);
 	ft_putstr(" ms: ");
-	b = ft_itoa(ph->n);
+	b = ft_itoa(ph->n + 1);
 	ft_putstr(b);
 	//free(b);
 	if (ph->activity == THINKING && ph->fork == 0)

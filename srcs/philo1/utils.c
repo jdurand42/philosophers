@@ -6,12 +6,12 @@ void ft_print(t_ph *ph)
 	char	*b;
 
 	gettimeofday(&now, NULL);
-	pthread_mutex_lock(ph->data->output);
+	pthread_mutex_lock(&ph->data->output);
 	b = ft_itoa(get_time(ph->data->time, now));
 	ft_putstr(b);
 	//free(b);
 	ft_putstr(" ms: ");
-	b = ft_itoa(ph->n);
+	b = ft_itoa(ph->n + 1);
 	ft_putstr(b);
 	//free(b);
 	if (ph->activity == THINKING && ph->has_a_fork == 0)
@@ -24,7 +24,7 @@ void ft_print(t_ph *ph)
 		ft_putstr(" has died\n");
 	else if (ph->activity == THINKING && ph->has_a_fork == 1)
 		ft_putstr(" has taken a fork\n");
-	pthread_mutex_unlock(ph->data->output);
+	pthread_mutex_unlock(&ph->data->output);
 }
 
 

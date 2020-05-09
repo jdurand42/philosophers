@@ -33,9 +33,9 @@ int init_mutex(t_data *data)
 		i++;
 	}*/
 	//data->deads = sem_open("/deads", O_CREAT | O_EXCL, S_IRWXU, 1);
-	if (pthread_mutex_init(data->dead_lock, NULL) ||
-	pthread_mutex_init(data->limit_lock , NULL) ||
-	pthread_mutex_init(data->output, NULL))
+	if (pthread_mutex_init(&data->dead_lock, NULL) ||
+	pthread_mutex_init(&data->limit_lock , NULL) ||
+	pthread_mutex_init(&data->output, NULL))
 		return (0);
 	return (1);
 }
@@ -82,7 +82,8 @@ t_ph	*ft_init_ph(t_data *data)
 		ph[i].data = data;
 		ph[i].has_a_fork = 0;
 		ph[i].started_eating = 0;
-		if (pthread_mutex_init(ph[i].forks, NULL) != 0)
+		ph[i].fork = 0;
+		if (pthread_mutex_init(&ph[i].forks, NULL) != 0)
 			return (NULL);
 		i++;
 	}
@@ -101,7 +102,7 @@ void *check_limit(void *data2)
 		if (data->limit_check >= data->limit)
 			break ;
 	}
-	pthread_mutex_lock(data->output);
+	pthread_mutex_lock(&data->output);
 	ft_putstr("All philosophers have eaten enough time\n");
 	data->over = 1;
 	// free all ph;

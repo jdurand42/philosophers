@@ -26,11 +26,11 @@ typedef	struct s_data
 	int time_to_sleep;
 	int limit;
 	int limit_check;
-	pthread_mutex_t	*forks;
+	pthread_mutex_t	forks;
 	//pthread_mutex_t	*deads;
-	pthread_mutex_t	*dead_lock;
-	pthread_mutex_t *limit_lock;
-	pthread_mutex_t	*output;
+	pthread_mutex_t	dead_lock;
+	pthread_mutex_t limit_lock;
+	pthread_mutex_t	output;
 	int id_dead;
 	int over;
 
@@ -48,7 +48,8 @@ typedef struct s_ph
 	int		limit;
 	int 	started_eating;
 	int		has_a_fork;
-	pthread_mutex_t *forks;
+	int		fork;
+	pthread_mutex_t forks;
 	pthread_t thread;
 	struct s_data *data;
 }		t_ph;
