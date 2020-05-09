@@ -143,7 +143,7 @@ int main(int ac, char **av)
 	if (!(data.ph = ft_init_ph(&data)))
 		return (ft_error(2));
 	i = 0;
-//	gettimeofday(&data.time, NULL);
+	gettimeofday(&data.time, NULL);
 	if (!threading(&data))
 		return (safe_exit(&data));
 /*	while (data.over != 1)
