@@ -1,14 +1,14 @@
-#include "../../includes/philo_one.h"
+#include "../includes/philo_two.h"
 
 void ft_print(t_ph *ph)
 {
 	struct timeval now;
 	char	*b;
 
-	gettimeofday(&now, NULL);
 	if (ph->data->over == 1)
 		return ;
-	pthread_mutex_lock(&ph->data->output);
+	gettimeofday(&now, NULL);
+	sem_wait(ph->data->output);
 	b = ft_itoa(get_time(ph->data->time, now));
 	ft_putstr(b);
 	free(b);
@@ -16,7 +16,7 @@ void ft_print(t_ph *ph)
 	b = ft_itoa(ph->n + 1);
 	ft_putstr(b);
 	free(b);
-	if (ph->activity == THINKING && ph->has_a_fork == 0)
+	if (ph->activity == THINKING && ph->fork == 0)
 		ft_putstr(" is THINKING\n");
 	else if (ph->activity == EATING)
 		ft_putstr(" is EATING\n");
@@ -24,9 +24,9 @@ void ft_print(t_ph *ph)
 		ft_putstr(" is SLEEPING\n");
 	else if (ph->activity == DEAD)
 		ft_putstr(" has died\n");
-	else if (ph->activity == THINKING && ph->has_a_fork == 1)
+	else if (ph->activity == THINKING && ph->fork == 1)
 		ft_putstr(" has taken a fork\n");
-	pthread_mutex_unlock(&ph->data->output);
+	sem_post(ph->data->output);
 }
 
 

@@ -1,20 +1,27 @@
-#include "../../includes/philo_three.h"
+#include "../includes/philo_one.h"
 
 void ft_print(t_ph *ph)
 {
 	struct timeval now;
 	char	*b;
 
+	if (ph->data->init == 0)
+	{
+	 	gettimeofday(&ph->data->time, NULL);
+		ph->data->init += 1;
+	}
 	gettimeofday(&now, NULL);
-	sem_wait(ph->data->output);
+	if (ph->data->over == 1)
+		return ;
+	pthread_mutex_lock(&ph->data->output);
 	b = ft_itoa(get_time(ph->data->time, now));
 	ft_putstr(b);
-	//free(b);
+	free(b);
 	ft_putstr(" ms: ");
 	b = ft_itoa(ph->n + 1);
 	ft_putstr(b);
-	//free(b);
-	if (ph->activity == THINKING && ph->fork == 0)
+	free(b);
+	if (ph->activity == THINKING && ph->has_a_fork == 0)
 		ft_putstr(" is THINKING\n");
 	else if (ph->activity == EATING)
 		ft_putstr(" is EATING\n");
@@ -22,15 +29,14 @@ void ft_print(t_ph *ph)
 		ft_putstr(" is SLEEPING\n");
 	else if (ph->activity == DEAD)
 		ft_putstr(" has died\n");
-	else if (ph->activity == THINKING && ph->fork == 1)
+	else if (ph->activity == THINKING && ph->has_a_fork == 1)
 		ft_putstr(" has taken a fork\n");
-	sem_post(ph->data->output);
+	pthread_mutex_unlock(&ph->data->output);
 }
 
 
 long	get_time(struct timeval ini, struct timeval now)
 {
-
 	long seconds;
 	long micros;
 

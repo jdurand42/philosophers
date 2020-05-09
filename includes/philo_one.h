@@ -33,6 +33,7 @@ typedef	struct s_data
 	pthread_mutex_t	output;
 	int id_dead;
 	int over;
+	int init;
 
 	struct timeval time;
 	struct s_ph	*ph;

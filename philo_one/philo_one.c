@@ -1,4 +1,4 @@
-#include "../../includes/philo_one.h"
+#include "../includes/philo_one.h"
 
 int	ft_error(int i)
 {
@@ -51,6 +51,7 @@ int ft_init_data(t_data *data, int ac, char **av)
 		return (1);
 	else
 		return (0);
+	data->init = 0;
 }
 
 t_ph	*ft_init_ph(t_data *data)

@@ -1,4 +1,4 @@
-#include "../../includes/philo_three.h"
+#include "../includes/philo_three.h"
 
 int	ft_error(int i)
 {
@@ -80,25 +80,18 @@ t_ph	*ft_init_ph(t_data *data)
 
 void *check_limit(void *data2)
 {
-	t_data *data = (t_data*)data2;
+	t_data *data;
 	int i;
 
 	i = 0;
+	data = (t_data*)data2;
 	while (i < data->n_p)
 	{
 		sem_wait(data->limit_sem);
 		i++;
 	}
-	i = 0;
-	/*
-	while (i < data->n_p)
-	{
-		kill(data->ph[i].pid, SIGKILL);
-		i++;
-	}*/
 	sem_post(data->deads);
 	ft_putstr("All philosophers have eaten enough time\n");
-	// free all ph;
 	return (0);
 }
 
@@ -147,7 +140,7 @@ void forking(t_data *data)
 		}
 		else if (data->ph[i].pid < 0)
 		{
-			printf("Error while forking\n");
+			ft_putstr("Error while forking\n");
 			safe_exit(data);
 		}
 		i++;
@@ -179,7 +172,6 @@ int main(int ac, char **av)
 			kill(data.ph[i].pid, SIGKILL);
 			i++;
 		}
-		ft_putstr("Simulation over\n");
 		// free ph
 		break ;
 	}

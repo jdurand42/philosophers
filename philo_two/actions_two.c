@@ -1,4 +1,4 @@
-#include "../../includes/philo_two.h"
+#include "../includes/philo_two.h"
 
 void	dying(t_ph *ph)
 {

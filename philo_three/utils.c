@@ -1,12 +1,10 @@
-#include "../../includes/philo_two.h"
+#include "../includes/philo_three.h"
 
 void ft_print(t_ph *ph)
 {
 	struct timeval now;
 	char	*b;
 
-	if (ph->data->over == 1)
-		return ;
 	gettimeofday(&now, NULL);
 	sem_wait(ph->data->output);
 	b = ft_itoa(get_time(ph->data->time, now));
