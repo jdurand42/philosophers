@@ -51,7 +51,6 @@ int ft_init_data(t_data *data, int ac, char **av)
 		return (1);
 	else
 		return (0);
-	data->init = 0;
 }
 
 t_ph	*ft_init_ph(t_data *data)
@@ -65,13 +64,11 @@ t_ph	*ft_init_ph(t_data *data)
 	while (i < data->n_p)
 	{
 		ph[i].n = i;
-		ph[i].i = 0;
 		ph[i].activity = THINKING;
 		ph[i].limit = 0;
 		ph[i].data = data;
 		ph[i].has_a_fork = 0;
 		ph[i].started_eating = 0;
-		ph[i].starved = 0;
 		ph[i].fork = 0;
 		if (pthread_mutex_init(&ph[i].forks, NULL) != 0)
 			return (NULL);
@@ -87,16 +84,16 @@ void *check_limit(void *data2)
 	int i;
 
 	i = 0;
-	while (i < data->n_p)
+	while (1)
 	{
-		if (data->ph[i].limit >= data->limit)
-			i++;
 		if (data->over == 1)
 			return (NULL);
+		if (data->limit_check == data->n_p)
+			break ;
 	}
-	pthread_mutex_lock(&data->output);
+/*	pthread_mutex_lock(&data->output);
 	ft_putstr("All philosophers have eaten enough time\n");
-	pthread_mutex_unlock(&data->output);
+	pthread_mutex_unlock(&data->output);*/
 	pthread_mutex_lock(&data->dead_lock);
 	data->over = 1;
 	pthread_mutex_unlock(&data->dead_lock);
@@ -117,15 +114,15 @@ int threading(t_data *data)
 	int i;
 
 	i = 0;
+	if (data->limit > 0)
+		if (pthread_create(&data->limit_thread, NULL, check_limit, (void*)data) != 0)
+			return (0);
 	while (i < data->n_p)
 	{
 		if (pthread_create(&data->ph[i].thread, NULL, philo, (void*)&data->ph[i]) != 0)
 			return (0);
 		i++;
 	}
-	if (data->limit > 0)
-		if (pthread_create(&data->limit_thread, NULL, check_limit, (void*)data) != 0)
-			return (0);
 	return (1);
 }
 
