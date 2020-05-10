@@ -11,14 +11,14 @@ void	*dying(t_ph *ph)
 
 void	*try_eating(void *ph2)
 {
-	t_ph *ph = (t_ph*)ph2;
+//	t_ph *ph = (t_ph*)ph2;
 
-	sem_wait(ph->data->forks);
-	ph->fork = 1;
-	ft_print(ph);
-	sem_wait(ph->data->forks);
-	ft_print(ph);
-	ph->started_eating = 1;
+	sem_wait(((t_ph*)(ph2))->data->forks);
+	sem_wait(((t_ph*)(ph2))->data->forks);
+	((t_ph*)(ph2))->fork = 1;
+	ft_print((t_ph*)ph2);
+	ft_print((t_ph*)ph2);
+	((t_ph*)(ph2))->started_eating = 1;
 	//ft_print(ph);
 	return (0);
 }
@@ -33,6 +33,7 @@ void eating(t_ph *ph)
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
 		while ((time = get_time(ph->start, ph->end)) < ph->data->time_to_die)
+			continue ;
 		sem_wait(ph->data->dead_lock); // pas de release des forks ici
 		dying(ph);
 		return ;

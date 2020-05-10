@@ -92,7 +92,9 @@ void *check_limit(void *data2)
 		i++;
 	}
 	sem_post(data->deads);
+/*	sem_wait(data->output);
 	ft_putstr("All philosophers have eaten enough time\n");
+	sem_post(data->output);*/
 	return (0);
 }
 
@@ -121,7 +123,7 @@ void safe_exit(t_data *data)
 	sem_close(data->deads);
 	sem_close(data->dead_lock);
 	sem_close(data->output);
-	sem_close(data->limit_sem);
+	//sem_close(data->limit_sem);
 	sem_unlink("/forks");
 	sem_unlink("/limit_sem");
 	sem_unlink("/deads");
