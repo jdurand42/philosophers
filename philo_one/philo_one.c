@@ -69,7 +69,8 @@ t_ph	*ft_init_ph(t_data *data)
 		ph[i].data = data;
 		ph[i].has_a_fork = 0;
 		ph[i].started_eating = 0;
-		ph[i].fork = 0;
+		ph[i].fork_priority_1 = fork_priority_1(ph[i].n, data->n_p);
+		ph[i].fork_priority_2 = fork_priority_2(ph[i].n, data->n_p);
 		if (pthread_mutex_init(&ph[i].forks, NULL) != 0)
 			return (NULL);
 		i++;
@@ -77,27 +78,17 @@ t_ph	*ft_init_ph(t_data *data)
 	return (ph);
 }
 
-
-void *check_limit(void *data2)
+void *check_limit(t_data *data)
 {
-	t_data *data = (t_data*)data2;
-	int i;
-
-	i = 0;
-	while (1)
+	while (data->over == 0)
 	{
-		if (data->over == 1)
-			return (NULL);
 		if (data->limit_check == data->n_p)
-			break ;
+		{
+			pthread_mutex_lock(&data->dead_lock);
+			data->over = 1;
+			pthread_mutex_unlock(&data->dead_lock);
+		}
 	}
-/*	pthread_mutex_lock(&data->output);
-	ft_putstr("All philosophers have eaten enough time\n");
-	pthread_mutex_unlock(&data->output);*/
-	pthread_mutex_lock(&data->dead_lock);
-	data->over = 1;
-	pthread_mutex_unlock(&data->dead_lock);
-	// free all ph;
 	return (0);
 }
 
@@ -114,9 +105,11 @@ int threading(t_data *data)
 	int i;
 
 	i = 0;
-	if (data->limit > 0)
-		if (pthread_create(&data->limit_thread, NULL, check_limit, (void*)data) != 0)
+	/*if (data->limit > 0)
+	{
+		if (pthread_create(limit_thread, NULL, check_limit, (void*)data) != 0)
 			return (0);
+	}*/
 	while (i < data->n_p)
 	{
 		if (pthread_create(&data->ph[i].thread, NULL, philo, (void*)&data->ph[i]) != 0)
@@ -130,22 +123,24 @@ int main(int ac, char **av)
 {
 	t_data	data;
 	int i;
+//	pthread_t limit_thread;
 
 
 	/// PROBLEM ON LIMIT_CHECK WITH > 6
+	i = 0;
 	if (ac != 5 && ac != 6)
 		return (ft_error(1));
 	if (!ft_init_data(&data, ac, av))
 		return (ft_error(1));
 	if (!(data.ph = ft_init_ph(&data)))
 		return (ft_error(2));
-	i = 0;
 	gettimeofday(&data.time, NULL);
 	if (!threading(&data))
 		return (safe_exit(&data));
 /*	while (data.over != 1)
 		continue ;*/
-	i = 0;
+	if (data.limit > 0)
+		check_limit(&data);
 	while (i < data.n_p)
 	{
 		pthread_join(data.ph[i].thread, NULL);

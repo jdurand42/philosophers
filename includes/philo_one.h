@@ -31,13 +31,11 @@ typedef	struct s_data
 	pthread_mutex_t	dead_lock;
 	pthread_mutex_t limit_lock;
 	pthread_mutex_t	output;
-	int id_dead;
 	int over;
-	int init;
 
 	struct timeval time;
 	struct s_ph	*ph;
-	pthread_t limit_thread;
+//	pthread_t limit_thread;
 }		t_data;
 
 
@@ -50,7 +48,8 @@ typedef struct s_ph
 	int 	started_eating;
 	int		starved;
 	int		has_a_fork;
-	int		fork;
+	int		fork_priority_1;
+	int		fork_priority_2;
 	pthread_mutex_t forks;
 	pthread_t thread;
 	struct s_data *data;
@@ -66,5 +65,7 @@ int		ft_atoi(char const *str);
 void	ft_putstr(char *s);
 char	*ft_itoa(int n);
 size_t	ft_strlen(char const *str);
+int 	fork_priority_1(int n, int n_max);
+int		fork_priority_2(int n, int n_max);
 
 #endif

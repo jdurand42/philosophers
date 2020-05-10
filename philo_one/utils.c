@@ -40,3 +40,46 @@ long	get_time(struct timeval ini, struct timeval now)
 
 	return (micros + seconds);
 }
+
+int fork_priority_1(int n, int n_max)
+{
+	if (n_max % 2)
+		return (n);
+	else
+	{
+		if (!(n % 2))
+		{
+			if (n < n_max - 1)
+				return (n + 1);
+			else
+				return (0);
+		}
+		else
+		{
+			return (n);
+		}
+	}
+}
+
+int fork_priority_2(int n, int n_max)
+{
+	if (n_max % 2)
+	{
+		if (n < n_max - 1)
+			return (n + 1);
+		else
+			return (0);
+	}
+	else
+	{
+		if (!(n % 2))
+			return (n);
+		else
+		{
+			if (n < n_max - 1)
+				return (n + 1);
+			else
+				return (0);
+		}
+	}
+}

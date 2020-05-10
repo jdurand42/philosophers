@@ -9,53 +9,10 @@ void	*dying(t_ph *ph)
 	exit (0);
 }
 
-int fork_priority_1(int n, int n_max)
-{
-	if (n_max % 2)
-		return (n);
-	else
-	{
-		if (!(n % 2))
-		{
-			if (n < n_max - 1)
-				return (n + 1);
-			else
-				return (0);
-		}
-		else
-		{
-			return (n);
-		}
-	}
-}
-
-int fork_priority_2(int n, int n_max)
-{
-	if (n_max % 2)
-	{
-		if (n < n_max - 1)
-			return (n + 1);
-		else
-			return (0);
-	}
-	else
-	{
-		if (!(n % 2))
-			return (n);
-		else
-		{
-			if (n < n_max - 1)
-				return (n + 1);
-			else
-				return (0);
-		}
-	}
-}
-
 void	*try_eating(void *ph2)
 {
-	pthread_mutex_lock(&((t_ph*)(ph2))->data->ph[fork_priority_1(((t_ph*)(ph2))->n, ((t_ph*)(ph2))->data->n_p)].forks);
-	pthread_mutex_lock(&((t_ph*)(ph2))->data->ph[fork_priority_2(((t_ph*)(ph2))->n, ((t_ph*)(ph2))->data->n_p)].forks);
+	pthread_mutex_lock(&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_1].forks);
+	pthread_mutex_lock(&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_2].forks);
 	((t_ph*)(ph2))->has_a_fork = 1;
 	ft_print((t_ph*)ph2);
 	ft_print((t_ph*)ph2);
@@ -75,19 +32,15 @@ void eating(t_ph *ph)
 		while ((time = get_time(ph->start, ph->end)) < ph->data->time_to_die)
 			gettimeofday(&ph->end, NULL) ;
 		pthread_mutex_lock(&ph->data->dead_lock);
-		pthread_mutex_unlock(&ph->data->ph[fork_priority_1(ph->n, ph->data->n_p)].forks);
-		pthread_mutex_unlock(&ph->data->ph[fork_priority_2(ph->n, ph->data->n_p)].forks);
+		pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_1].forks);
+		pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_2].forks);
 		dying(ph);
 		return ;
 	}
 	while (get_time(ph->start, ph->end) < ph->data->time_to_eat)
 		gettimeofday(&ph->end, NULL);
-	pthread_mutex_unlock(&ph->data->ph[fork_priority_1(ph->n, ph->data->n_p)].forks);
-	pthread_mutex_unlock(&ph->data->ph[fork_priority_2(ph->n, ph->data->n_p)].forks);
-	//if (ph->data->limit > 0)
-	//pthread_mutex_lock(&ph->data->limit_lock);
-	//pthread_mutex_unlock(&ph->data->limit_lock);
-	//if (ph->data->limit > 0 && ph->limit == ph->data->limit)
+	pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_1].forks);
+	pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_2].forks);
 	ph->has_a_fork = 0;
 	ph->activity = SLEEPING;
 	ft_print(ph);
