@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   actions_one.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
+/*   Updated: 2020/05/11 01:32:01 by jeromedurand     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo_one.h"
 
 void	*dying(t_ph *ph)
@@ -6,13 +18,15 @@ void	*dying(t_ph *ph)
 	ft_print(ph);
 	ph->data->over = 1;
 	pthread_mutex_unlock(&ph->data->dead_lock);
-	exit (0);
+	return (0);
 }
 
 void	*try_eating(void *ph2)
 {
-	pthread_mutex_lock(&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_1].forks);
-	pthread_mutex_lock(&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_2].forks);
+	pthread_mutex_lock(
+	&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_1].forks);
+	pthread_mutex_lock(
+	&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_2].forks);
 	((t_ph*)(ph2))->has_a_fork = 1;
 	ft_print((t_ph*)ph2);
 	ft_print((t_ph*)ph2);
@@ -20,9 +34,9 @@ void	*try_eating(void *ph2)
 	return (0);
 }
 
-void eating(t_ph *ph)
+void	eating(t_ph *ph)
 {
-	long time;
+	long	time;
 
 	ph->activity = EATING;
 	ft_print(ph);
@@ -30,7 +44,7 @@ void eating(t_ph *ph)
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
 		while ((time = get_time(ph->start, ph->end)) < ph->data->time_to_die)
-			gettimeofday(&ph->end, NULL) ;
+			gettimeofday(&ph->end, NULL);
 		pthread_mutex_lock(&ph->data->dead_lock);
 		pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_1].forks);
 		pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_2].forks);
@@ -47,23 +61,20 @@ void eating(t_ph *ph)
 	ph->started_eating = 0;
 }
 
-int sleeping(t_ph *ph)
+int		sleeping(t_ph *ph)
 {
-	struct timeval start_sleep;
+	struct timeval	start_sleep;
 
 	gettimeofday(&ph->end, NULL);
 	gettimeofday(&start_sleep, NULL);
-	if (ph->data->limit > 0)
-	{
-		ph->limit += 1;
-		if (ph->limit == ph->data->limit)
-			ph->data->limit_check += 1;
-	}
+	ph->limit += 1;
+	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
+			pthread_mutex_unlock(&ph->limit_check);
 	while ((get_time(start_sleep, ph->end)) < ph->data->time_to_sleep)
 	{
 		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
 		{
-			pthread_mutex_unlock(&ph->data->dead_lock);
+			pthread_mutex_lock(&ph->data->dead_lock);
 			dying(ph);
 			return (0);
 		}
@@ -74,10 +85,16 @@ int sleeping(t_ph *ph)
 	return (1);
 }
 
+void 	*safe_return(t_ph *ph)
+{
+	pthread_mutex_unlock(&ph->limit_check);
+	return (NULL);
+}
+
 void	*philo(void *b)
 {
-	pthread_t eating_thread;
-	t_ph	*ph;
+	pthread_t	eating_thread;
+	t_ph		*ph;
 
 	ph = (t_ph*)b;
 	gettimeofday(&ph->start, NULL);
@@ -95,19 +112,19 @@ void	*philo(void *b)
 					eating(ph);
 					break ;
 				}
-				else if (ph->started_eating == 0 && get_time(ph->start, ph->end) >= ph->data->time_to_die)
+				else if (ph->started_eating == 0 &&
+				get_time(ph->start, ph->end) >= ph->data->time_to_die)
 				{
 					pthread_mutex_lock(&ph->data->dead_lock);
 					dying(ph);
-					return (NULL);
 				}
 				if (ph->data->over == 1)
-					return (NULL);
+					return (safe_return(ph));
 			}
 		}
 		if (ph->activity == SLEEPING)
 			if (!sleeping(ph))
-				return (NULL);
+				return (safe_return(ph));
 	}
 	return (NULL);
 }

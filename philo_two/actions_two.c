@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   actions_two.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
+/*   Updated: 2020/05/10 19:14:30 by jeromedurand     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo_two.h"
 
 void	*dying(t_ph *ph)
@@ -6,7 +18,7 @@ void	*dying(t_ph *ph)
 	ft_print(ph);
 	ph->data->over = 1;
 	sem_post(ph->data->deads);
-	exit (0);
+	return (0);
 }
 
 void	*try_eating(void *ph2)
@@ -20,9 +32,9 @@ void	*try_eating(void *ph2)
 	return (0);
 }
 
-void eating(t_ph *ph)
+void	eating(t_ph *ph)
 {
-	long time;
+	long	time;
 
 	ph->activity = EATING;
 	ft_print(ph);
@@ -30,7 +42,7 @@ void eating(t_ph *ph)
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
 		while ((time = get_time(ph->start, ph->end)) < ph->data->time_to_die)
-			gettimeofday(&ph->end, NULL) ;
+			gettimeofday(&ph->end, NULL);
 		sem_wait(ph->data->dead_lock);
 		sem_post(ph->data->forks);
 		sem_post(ph->data->forks);
@@ -41,7 +53,6 @@ void eating(t_ph *ph)
 		gettimeofday(&ph->end, NULL);
 	sem_post(ph->data->forks);
 	sem_post(ph->data->forks);
-	//if (ph->data->limit > 0)
 	ph->limit += 1;
 	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
 		sem_post(ph->data->limit_sem);
@@ -51,9 +62,9 @@ void eating(t_ph *ph)
 	ft_print(ph);
 }
 
-int sleeping(t_ph *ph)
+int		sleeping(t_ph *ph)
 {
-	struct timeval start_sleep;
+	struct timeval	start_sleep;
 
 	gettimeofday(&ph->end, NULL);
 	gettimeofday(&start_sleep, NULL);
@@ -74,8 +85,8 @@ int sleeping(t_ph *ph)
 
 void	*philo(void *b)
 {
-	pthread_t eating_thread;
-	t_ph	*ph;
+	pthread_t	eating_thread;
+	t_ph		*ph;
 
 	ph = (t_ph*)b;
 	gettimeofday(&ph->start, NULL);
@@ -93,7 +104,8 @@ void	*philo(void *b)
 					eating(ph);
 					break ;
 				}
-				else if (ph->started_eating == 0 && get_time(ph->start, ph->end) >= ph->data->time_to_die)
+				else if (ph->started_eating == 0 &&
+				get_time(ph->start, ph->end) >= ph->data->time_to_die)
 				{
 					sem_wait(ph->data->dead_lock);
 					dying(ph);

@@ -58,5 +58,9 @@ int		ft_atoi(char const *str);
 void	ft_putstr(char *s);
 char	*ft_itoa(int n);
 size_t	ft_strlen(char const *str);
+int		ft_error(int i);
+void	init_sems(t_data *data);
+int		ft_init_data(t_data *data, int ac, char **av);
+t_ph	*ft_init_ph(t_data *data);
 
 #endif

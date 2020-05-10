@@ -1,0 +1,4 @@
+Norme: ./actions_three.c
+Error (line 34): function eating has 26 lines
+Error (line 85): function philo has 33 lines
+Error (line 85): declarations in philo are bad aligned

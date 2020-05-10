@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/10 18:35:36 by jeromedu          #+#    #+#             */
+/*   Updated: 2020/05/10 18:36:55 by jeromedurand     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo_two.h"
 
-void ft_print(t_ph *ph)
+void	ft_print(t_ph *ph)
 {
-	struct timeval now;
-	char	*b;
+	struct timeval	now;
+	char			*b;
 
 	if (ph->data->over == 1)
 		return ;
@@ -29,15 +41,12 @@ void ft_print(t_ph *ph)
 	sem_post(ph->data->output);
 }
 
-
 long	get_time(struct timeval ini, struct timeval now)
 {
-
 	long seconds;
 	long micros;
 
 	seconds = (now.tv_sec - ini.tv_sec) * 1000;
 	micros = (now.tv_usec - (ini.tv_usec)) / 1000;
-
 	return (micros + seconds);
 }

@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/10 18:52:01 by jeromedu          #+#    #+#             */
+/*   Updated: 2020/05/10 18:54:18 by jeromedurand     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo_one.h"
 
-void ft_print(t_ph *ph)
+void	ft_print(t_ph *ph)
 {
- 	struct timeval now;
-	char	*b;
+	struct timeval	now;
+	char			*b;
 
 	gettimeofday(&now, NULL);
 	if (ph->data->over == 1)
@@ -29,7 +41,6 @@ void ft_print(t_ph *ph)
 	pthread_mutex_unlock(&ph->data->output);
 }
 
-
 long	get_time(struct timeval ini, struct timeval now)
 {
 	long seconds;
@@ -37,11 +48,10 @@ long	get_time(struct timeval ini, struct timeval now)
 
 	seconds = (now.tv_sec - ini.tv_sec) * 1000;
 	micros = (now.tv_usec - (ini.tv_usec)) / 1000;
-
 	return (micros + seconds);
 }
 
-int fork_priority_1(int n, int n_max)
+int		fork_priority_1(int n, int n_max)
 {
 	if (n_max % 2)
 		return (n);
@@ -61,7 +71,7 @@ int fork_priority_1(int n, int n_max)
 	}
 }
 
-int fork_priority_2(int n, int n_max)
+int		fork_priority_2(int n, int n_max)
 {
 	if (n_max % 2)
 	{

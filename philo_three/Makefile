@@ -1,9 +1,9 @@
 
 NAME		=	philo_three
 
-SRCS_ONE	=	./actions_three.c ./utils.c ./philo_three.c
+SRCS_ONE	=	./actions_three.c ./utils.c ./philo_three.c ./init.c
 
-UTILS		=	./commons.c
+UTILS		=	./commons.c ./commons2.C
 
 CC		=	clang
 

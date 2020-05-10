@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/10 18:44:15 by jeromedu          #+#    #+#             */
+/*   Updated: 2020/05/10 18:45:16 by jeromedurand     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo_three.h"
 
-void ft_print(t_ph *ph)
+void	ft_print(t_ph *ph)
 {
-	struct timeval now;
-	char	*b;
+	struct timeval	now;
+	char			*b;
 
 	gettimeofday(&now, NULL);
 	sem_wait(ph->data->output);
@@ -27,15 +39,12 @@ void ft_print(t_ph *ph)
 	sem_post(ph->data->output);
 }
 
-
 long	get_time(struct timeval ini, struct timeval now)
 {
-
-	long seconds;
-	long micros;
+	long	seconds;
+	long	micros;
 
 	seconds = (now.tv_sec - ini.tv_sec) * 1000;
 	micros = (now.tv_usec - (ini.tv_usec)) / 1000;
-
 	return (micros + seconds);
 }

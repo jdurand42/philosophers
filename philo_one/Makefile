@@ -1,9 +1,9 @@
 
 NAME		=	philo_one
 
-SRCS_ONE	=	./actions_one.c ./utils.c ./philo_one.c
+SRCS_ONE	=	./actions_one.c ./utils.c ./philo_one.c ./init.c
 
-UTILS		=	./commons.c
+UTILS		=	./commons.c ./commons2.c
 
 CC		=	clang
 

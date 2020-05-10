@@ -1,7 +1,8 @@
 
 NAME		=	philo_two
 
-SRCS_ONE	=	./actions_two.c ./utils.c ./philo_two.c ./commons.c
+SRCS_ONE	=	./actions_two.c ./utils.c ./philo_two.c ./commons.c ./commons2.c \
+				./init.c
 
 UTILS		=
 
