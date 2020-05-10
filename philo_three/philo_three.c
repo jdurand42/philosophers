@@ -106,7 +106,7 @@ void prepare_sems(t_data *data)
 	while (i < data->n_p)
 	{
 		sem_wait(data->deads);
-		i++;
+		i++; /* A CHANGER ? */
 	}
 	i = 0;
 	while (i < data->n_p)
@@ -142,9 +142,7 @@ void forking(t_data *data)
 	{
 		if ((data->ph[i].pid = fork()) == 0)
 		{
-		//	printf("process %d created\n", i);
 			philo(&data->ph[i]);
-		//	printf("Fork %d ended\n", i);
 			exit(0);
 		}
 		else if (data->ph[i].pid < 0)

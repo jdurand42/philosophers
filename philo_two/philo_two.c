@@ -42,7 +42,6 @@ int ft_init_data(t_data *data, int ac, char **av)
 	}
 	else
 		data->limit = -1;
-	gettimeofday(&data->time, NULL);
 	init_sems(data);
 	if (data->output == SEM_FAILED || data->forks == SEM_FAILED ||
 	data->deads == SEM_FAILED
@@ -86,16 +85,18 @@ void *check_limit(void *data2)
 	i = 0;
 	while (i < data->n_p)
 	{
-		sem_wait(data->limit_sem);
-		i++;
-	}
-	i = 0;
 
-	sem_wait(data->output);
+//		sem_wait(data->limit_sem);
+		if (data->over == 1)
+			return (0);
+		if (data->ph[i].limit >= data->limit)
+			i++;
+	}
+	//sem_wait(data->output);
 	data->over = 1;
-	ft_putstr("All philosophers have eaten enough time\n");
+	//ft_putstr("All philosophers have eaten enough time\n");
 	sem_post(data->deads);
-	sem_post(data->output);
+	//sem_post(data->output);
 	// free all ph;
 	return (0);
 }
@@ -104,19 +105,13 @@ void prepare_sems(t_data *data)
 {
 	int	i;
 
-	i = 0;
-//	while (i < data->n_p)
-//	{
-		sem_wait(data->deads);
-//		i++;
-//	}
+	sem_wait(data->deads);
 	i = 0;
 	while (i < data->n_p)
 	{
 		sem_wait(data->limit_sem);
 		i++;
 	}
-
 }
 
 int safe_exit(t_data *data)
@@ -130,6 +125,11 @@ int safe_exit(t_data *data)
 	sem_close(data->deads);
 	sem_close(data->dead_lock);
 	sem_close(data->output);
+	sem_unlink("/forks");
+	sem_unlink("/limit_sem");
+	sem_unlink("/deads");
+	sem_unlink("/dead_lock");
+	sem_unlink("/output");
 	free(data->ph);
 	return (0);
 }
@@ -139,6 +139,7 @@ int threading(t_data *data)
 	int i;
 
 	i = 0;
+	gettimeofday(&data->time, NULL);
 	while (i < data->n_p)
 	{
 		if (pthread_create(&data->ph[i].thread, NULL, philo, (void*)&data->ph[i]) != 0)
@@ -169,13 +170,9 @@ int main(int ac, char **av)
 	while (1)
 	{
 		sem_wait(data.deads);
-
-		ft_putstr("Simulation over\n");
+		//ft_putstr("Simulation over\n");
 		return (safe_exit(&data));
-		// free ph
-		//break ;
 	}
-	//sem_close(data.limit_sem);
 	safe_exit(&data);
 	return (0);
 }

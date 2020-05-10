@@ -46,6 +46,8 @@ typedef struct s_ph
 	int		fork;
 	pthread_t 	thread;
 	struct s_data *data;
+	struct timeval start;
+	struct timeval end;
 }		t_ph;
 
 void 	*philo(void *b);
