@@ -41,10 +41,10 @@ void eating(t_ph *ph)
 		gettimeofday(&ph->end, NULL);
 	sem_post(ph->data->forks);
 	sem_post(ph->data->forks);
-	if (ph->data->limit > 0)
-		ph->limit += 1;
-/*	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
-		sem_post(ph->data->limit_sem);*/
+	//if (ph->data->limit > 0)
+	ph->limit += 1;
+	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
+		sem_post(ph->data->limit_sem);
 	ph->fork = 0;
 	ph->started_eating = 0;
 	ph->activity = SLEEPING;
@@ -53,19 +53,19 @@ void eating(t_ph *ph)
 
 int sleeping(t_ph *ph)
 {
-	long time;
+	struct timeval start_sleep;
 
 	gettimeofday(&ph->end, NULL);
-	while ((time = get_time(ph->start, ph->end)) < ph->data->time_to_sleep)
+	gettimeofday(&start_sleep, NULL);
+	while ((get_time(start_sleep, ph->end)) < ph->data->time_to_sleep)
 	{
-		if (time > ph->data->time_to_die)
+		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
 		{
 			sem_wait(ph->data->dead_lock);
 			dying(ph);
 			return (0);
 		}
-		else if (ph->data->over == 1)
-			return (0);
+		gettimeofday(&ph->end, NULL);
 	}
 	ph->activity = THINKING;
 	ft_print(ph);

@@ -85,12 +85,12 @@ void *check_limit(void *data2)
 	i = 0;
 	while (i < data->n_p)
 	{
-
-//		sem_wait(data->limit_sem);
 		if (data->over == 1)
 			return (0);
-		if (data->ph[i].limit >= data->limit)
-			i++;
+		sem_wait(data->limit_sem);
+		i++;
+	/*	if (data->ph[i].limit >= data->limit)
+			i++;*/
 	}
 	//sem_wait(data->output);
 	data->over = 1;
