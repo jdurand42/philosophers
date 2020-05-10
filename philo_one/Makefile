@@ -1,34 +1,42 @@
 
 NAME		=	philo_one
 
-SRCS_ONE	=	./actions_one.c ./utils.c ./philo_one.c ./init.c
-
-UTILS		=	./commons.c ./commons2.c
+SRCS	=	./actions_one.c ./utils.c ./philo_one.c ./init.c \
+				./commons.c ./commons2.c
 
 CC		=	clang
 
 SANI	=	-fsanitize=address -g3
 
-FLAGS		=	-Wall -Wextra -Werror
+FLAGS	=	-Wall -Wextra -Werror
+
+OBJS	=	$(SRCS:.c=.o)
+
+RM		= rm -rf
 
 all	:	$(NAME)
 
-$(NAME):
-		make w1
+$(NAME): $(OBJS)
+		$(CC) -o $(NAME) $(FLAGS) $(OBJS)
 
 c1	:
-		$(CC) -o $(NAME) $(SRCS_ONE) $(UTILS)
+		clean
+		$(CC) -o $(NAME) $(OBJS) $(SRCS)
 
 s1	:
-		$(CC) -o $(NAME) $(SANI) $(SRCS_ONE) $(UTILS)
+		clean
+		$(CC) -o $(NAME) $(SANI) $(SRCS)
 
 w1	:
-		$(CC) -o $(NAME) $(FLAGS) $(SRCS_ONE) $(UTILS)
+		clean
+		$(CC) -o $(NAME) $(FLAGS) $(SRCS)
 
 clean	:
-		echo "cleaning"
+		$(RM) $(OBJS)
 
 fclean	:	clean
-		rm -rf $(NAME)
+		$(RM) $(NAME)
 
 re	:	fclean all
+
+.PHONY	:	clean fclean all c1 s1 w1

@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 01:32:01 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 01:42:30 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	eating(t_ph *ph)
 		pthread_mutex_lock(&ph->data->dead_lock);
 		pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_1].forks);
 		pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_2].forks);
+		pthread_mutex_unlock(&ph->limit_check);
 		dying(ph);
 		return ;
 	}
