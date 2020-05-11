@@ -6,11 +6,11 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:45:25 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 12:27:20 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 14:00:48 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_three.h"
+#include "./includes/philo_three.h"
 
 void	*check_limit(void *data2)
 {
@@ -27,7 +27,6 @@ void	*check_limit(void *data2)
 		i++;
 	}
 	sem_post(data->deads);
-
 	return (0);
 }
 
@@ -103,12 +102,8 @@ int		main(int ac, char **av)
 	{
 		sem_wait(data.deads);
 		data.over = 1;
-		sem_wait(data.output);
 		while (i < data.n_p)
-		{
-			kill(data.ph[i].pid, SIGKILL);
-			i++;
-		}
+			kill(data.ph[i++].pid, SIGKILL);
 		break ;
 	}
 	safe_exit(&data);

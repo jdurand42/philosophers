@@ -6,11 +6,11 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:10 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 12:17:15 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 13:58:56 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_one.h"
+#include "./includes/philo_one.h"
 
 int		safe_exit(t_data *data)
 {

@@ -6,11 +6,11 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 12:21:13 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 13:59:51 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_two.h"
+#include "./includes/philo_two.h"
 
 void	*check_limit(void *data2)
 {

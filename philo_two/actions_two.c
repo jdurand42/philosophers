@@ -6,14 +6,15 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 12:21:38 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 14:12:59 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_two.h"
+#include "./includes/philo_two.h"
 
 void	*dying(t_ph *ph)
 {
+	gettimeofday(&ph->end, NULL);
 	ph->activity = DEAD;
 	ft_print(ph);
 	ph->data->over = 1;
@@ -82,41 +83,19 @@ int		sleeping(t_ph *ph)
 	return (1);
 }
 
-void	*philo(void *b)
+int		thinking(t_ph *ph)
 {
-	pthread_t	eating_thread;
-	t_ph		*ph;
-
-	ph = (t_ph*)b;
-	gettimeofday(&ph->start, NULL);
-	gettimeofday(&ph->end, NULL);
-	while (ph->data->over == 0)
+	if (ph->started_eating == 1)
 	{
-		pthread_create(&eating_thread, NULL, try_eating, (void*)ph);
-		if (ph->activity == THINKING)
-		{
-			while (1)
-			{
-				gettimeofday(&ph->end, NULL);
-				if (ph->started_eating == 1)
-				{
-					eating(ph);
-					break ;
-				}
-				else if (ph->started_eating == 0 &&
-				get_time(ph->start, ph->end) >= ph->data->time_to_die)
-				{
-					sem_wait(ph->data->dead_lock);
-					dying(ph);
-					return (NULL);
-				}
-				if (ph->data->over == 1)
-					return (NULL);
-			}
-		}
-		if (ph->activity == SLEEPING)
-			if (!sleeping(ph))
-				return (NULL);
+		eating(ph);
+		return (1);
 	}
-	return (NULL);
+	else if (ph->started_eating == 0 &&
+	get_time(ph->start, ph->end) >= ph->data->time_to_die)
+	{
+		sem_wait(ph->data->dead_lock);
+		dying(ph);
+		return (0);
+	}
+	return (0);
 }

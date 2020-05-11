@@ -6,17 +6,19 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 12:16:56 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 13:56:05 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_one.h"
+#include "./includes/philo_one.h"
 
 void	*dying(t_ph *ph)
 {
 	ph->activity = DEAD;
 	ft_print(ph);
 	ph->data->over = 1;
+	if (ph->limit <= ph->data->limit)
+		pthread_mutex_unlock(&ph->limit_check);
 	pthread_mutex_unlock(&ph->data->dead_lock);
 	return (0);
 }
@@ -36,14 +38,12 @@ void	*try_eating(void *ph2)
 
 void	eating(t_ph *ph)
 {
-	long	time;
-
 	ph->activity = EATING;
 	ft_print(ph);
 	gettimeofday(&ph->start, NULL);
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
-		while ((time = get_time(ph->start, ph->end)) < ph->data->time_to_die)
+		while ((get_time(ph->start, ph->end)) < ph->data->time_to_die)
 			gettimeofday(&ph->end, NULL);
 		pthread_mutex_lock(&ph->data->dead_lock);
 		pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_1].forks);
@@ -86,46 +86,19 @@ int		sleeping(t_ph *ph)
 	return (1);
 }
 
-void	*safe_return(t_ph *ph)
+int		thinking(t_ph *ph)
 {
-	pthread_mutex_unlock(&ph->limit_check);
-	return (NULL);
-}
-
-void	*philo(void *b)
-{
-	pthread_t	eating_thread;
-	t_ph		*ph;
-
-	ph = (t_ph*)b;
-	gettimeofday(&ph->start, NULL);
-	gettimeofday(&ph->end, NULL);
-	while (ph->data->over == 0)
+	if (ph->started_eating == 1)
 	{
-		pthread_create(&eating_thread, NULL, try_eating, (void*)ph);
-		if (ph->activity == THINKING)
-		{
-			while (1)
-			{
-				gettimeofday(&ph->end, NULL);
-				if (ph->started_eating == 1)
-				{
-					eating(ph);
-					break ;
-				}
-				else if (ph->started_eating == 0 &&
-				get_time(ph->start, ph->end) >= ph->data->time_to_die)
-				{
-					pthread_mutex_lock(&ph->data->dead_lock);
-					dying(ph);
-				}
-				if (ph->data->over == 1)
-					return (safe_return(ph));
-			}
-		}
-		if (ph->activity == SLEEPING)
-			if (!sleeping(ph))
-				return (safe_return(ph));
+		eating(ph);
+		return (1);
 	}
-	return (NULL);
+	else if (ph->started_eating == 0 &&
+	get_time(ph->start, ph->end) >= ph->data->time_to_die)
+	{
+		pthread_mutex_lock(&ph->data->dead_lock);
+		dying(ph);
+		return (0);
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:36 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 12:13:44 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 13:41:12 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,14 @@ int					ft_error(int i);
 void				init_sems(t_data *data);
 int					ft_init_data(t_data *data, int ac, char **av);
 t_ph				*ft_init_ph(t_data *data);
+void				*dying(t_ph *ph);
+void				*try_eating(void *ph2);
+void				eating(t_ph *ph);
+int					sleeping(t_ph *ph);
+void				*check_limit(void *data2);
+void				prepare_sems(t_data *data);
+void				safe_exit(t_data *data);
+void				forking(t_data *data);
+int					thinking(t_ph *ph);
 
 #endif

@@ -2,13 +2,13 @@
 NAME		=	philo_two
 
 SRCS	=	./actions_two.c ./utils.c ./philo_two.c ./init.c \
-				./commons.c ./commons2.c
+				./commons.c ./commons2.c ./actions_two2.c
 
 CC		=	clang
 
 SANI	=	-fsanitize=address -g3
 
-FLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror
 
 OBJS	=	$(SRCS:.c=.o)
 
@@ -17,7 +17,7 @@ RM		= rm -rf
 all	:	$(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) -o $(NAME) $(FLAGS) $(OBJS)
+		$(CC) -o $(NAME) $(CFLAGS) $(OBJS)
 
 c1	:
 		clean
@@ -29,7 +29,7 @@ s1	:
 
 w1	:
 		clean
-		$(CC) -o $(NAME) $(FLAGS) $(SRCS)
+		$(CC) -o $(NAME) $(CFLAGS) $(SRCS)
 
 clean	:
 		$(RM) $(OBJS)

@@ -6,20 +6,18 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:44:15 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/10 18:45:16 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 13:54:23 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_three.h"
+#include "./includes/philo_three.h"
 
 void	ft_print(t_ph *ph)
 {
-	struct timeval	now;
 	char			*b;
 
-	gettimeofday(&now, NULL);
 	sem_wait(ph->data->output);
-	b = ft_itoa(get_time(ph->data->time, now));
+	b = ft_itoa(get_time(ph->data->time, ph->end));
 	ft_putstr(b);
 	free(b);
 	ft_putstr(" ms: ");

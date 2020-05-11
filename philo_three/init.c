@@ -6,20 +6,20 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:19:15 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/10 19:19:30 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 13:16:20 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_three.h"
+#include "./includes/philo_three.h"
 
 int		ft_error(int i)
 {
 	if (i == 1)
 	{
 		ft_putstr("Error: arguments\n");
-		ft_putstr("Must be: [nb of philosophers] [time_to_die] \
-		[time_to_eat] [time_to_sleep] [optionnal: \
-		nb_ot_time_each_philosophers_to_eat]\n");
+		ft_putstr("Must be: [nb of philosophers] [time_to_die] [time_to_eat]");
+		ft_putstr("[time_to_sleep] [optionnal:");
+		ft_putstr("nb_ot_time_each_philosophers_to_eat]\n");
 	}
 	else if (i == 2)
 		ft_putstr("Error on a Malloc\n");
