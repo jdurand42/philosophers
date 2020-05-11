@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_two.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/11 02:00:40 by jeromedu          #+#    #+#             */
+/*   Updated: 2020/05/11 02:13:21 by jeromedurand     ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 # include <stdio.h>
@@ -7,8 +19,8 @@
 # include <string.h>
 # include <sys/time.h>
 # include <semaphore.h>
-# include <fcntl.h>
-# include <sys/stat.h>
+//# include <fcntl.h>
+//# include <sys/stat.h>
 
 # define THINKING 1
 # define EATING 2

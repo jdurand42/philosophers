@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:20:05 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/10 19:20:45 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 11:47:45 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	init_sems(t_data *data)
 	sem_unlink("/dead_lock");
 	sem_unlink("/output");
 	data->forks = sem_open("/forks", O_CREAT | O_EXCL, S_IRWXU, data->n_p);
-	data->deads = sem_open("/deads", O_CREAT | O_EXCL, S_IRWXU, 1);
+	data->deads = sem_open("/deads", O_CREAT | O_EXCL, S_IRWXU, data->n_p);
 	data->dead_lock = sem_open("/dead_lock", O_CREAT | O_EXCL, S_IRWXU, 1);
 	data->limit_sem = sem_open("/limit_sem", O_CREAT | O_EXCL, S_IRWXU,
 	data->n_p);

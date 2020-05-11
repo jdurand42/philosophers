@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/10 19:14:30 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 11:52:39 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	*dying(t_ph *ph)
 	ft_print(ph);
 	ph->data->over = 1;
 	sem_post(ph->data->deads);
+	sem_post(ph->data->dead_lock);
+	printf("bonjour\n");
 	return (0);
 }
 

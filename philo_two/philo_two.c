@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 01:03:13 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 11:58:22 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,17 @@ void	prepare_sems(t_data *data)
 {
 	int	i;
 
-	sem_wait(data->deads);
+	//sem_wait(data->deads);
 	i = 0;
 	while (i < data->n_p)
 	{
 		sem_wait(data->limit_sem);
+		i++;
+	}
+	i = 0;
+	while (i < data->n_p)
+	{
+		sem_wait(data->deads);
 		i++;
 	}
 }
@@ -51,10 +57,7 @@ int		safe_exit(t_data *data)
 	i = 0;
 	while (i < data->n_p)
 		pthread_join(data->ph[i++].thread, NULL);
-	sem_close(data->forks);
-	sem_close(data->deads);
-	sem_close(data->dead_lock);
-	sem_close(data->output);
+	printf("prout\n");
 	sem_unlink("/forks");
 	sem_unlink("/limit_sem");
 	sem_unlink("/deads");
@@ -70,6 +73,10 @@ int		threading(t_data *data)
 
 	i = 0;
 	gettimeofday(&data->time, NULL);
+	if (data->limit > 0)
+		if (pthread_create(&data->limit_thread, NULL, check_limit,
+		(void*)data) != 0)
+			return (0);
 	while (i < data->n_p)
 	{
 		if (pthread_create(&data->ph[i].thread, NULL, philo,
@@ -77,10 +84,6 @@ int		threading(t_data *data)
 			return (0);
 		i++;
 	}
-	if (data->limit > 0)
-		if (pthread_create(&data->limit_thread, NULL, check_limit,
-		(void*)data) != 0)
-			return (0);
 	return (1);
 }
 
