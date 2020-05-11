@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:40 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 13:38:45 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 14:36:46 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <string.h>
 # include <sys/time.h>
 # include <semaphore.h>
+# include <sys/types.h>
+# include <fcntl.h>
 
 # define THINKING 1
 # define EATING 2

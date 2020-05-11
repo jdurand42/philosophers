@@ -14,10 +14,12 @@ OBJS	=	$(SRCS:.c=.o)
 
 RM		= rm -rf
 
+LIB		=	-lpthread
+
 all	:	$(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) -o $(NAME) $(CFLAGS) $(OBJS)
+		$(CC) $(LIB) -o $(NAME) $(CFLAGS) $(OBJS)
 
 c1	:
 		clean
