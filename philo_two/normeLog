@@ -3,9 +3,10 @@ Warning: Not a valid file
 Norme: ./normeLog
 Warning: Not a valid file
 Norme: ./commons2.c
-Norme: ./philo_three.c
 Norme: ./init.c
+Error: global scope bad aligned
 Norme: ./commons.c
 Norme: ./utils.c
-Norme: ./actions_three.c
-Error (line 83): function philo has 33 lines
+Norme: ./actions_two.c
+Error (line 85): function philo has 35 lines
+Norme: ./philo_two.c

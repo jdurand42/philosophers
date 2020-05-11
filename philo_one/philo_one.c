@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:10 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 01:28:31 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 12:17:15 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int		safe_exit(t_data *data)
 {
 	usleep(20000);
 	free(data->ph);
-	// while (1);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:10:38 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/10 19:12:08 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 12:24:11 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ size_t		ft_strlen(char const *str)
 	size_t len;
 
 	len = 0;
+	if (!str)
+		return (0);
 	while (str[len] != '\0')
 		len++;
 	return (len);

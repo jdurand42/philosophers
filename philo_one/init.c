@@ -6,12 +6,12 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:17:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 01:26:22 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 12:16:19 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo_one.h"
-// NORME .H A NE PAS OUBLIER
+
 int		ft_error(int i)
 {
 	if (i == 1)

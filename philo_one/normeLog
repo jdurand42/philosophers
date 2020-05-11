@@ -1,3 +1,12 @@
+Norme: ./Makefile
+Warning: Not a valid file
+Norme: ./normeLog
+Warning: Not a valid file
+Norme: ./commons2.c
+Norme: ./init.c
+Norme: ./commons.c
+Norme: ./actions_one.c
+Error: 6 functions in the file
+Error (line 95): function philo has 34 lines
 Norme: ./philo_one.c
-Error: 8 functions in the file
-Error (line 112): C++ comment
+Norme: ./utils.c

@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 01:42:30 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 12:16:56 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		sleeping(t_ph *ph)
 	gettimeofday(&start_sleep, NULL);
 	ph->limit += 1;
 	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
-			pthread_mutex_unlock(&ph->limit_check);
+		pthread_mutex_unlock(&ph->limit_check);
 	while ((get_time(start_sleep, ph->end)) < ph->data->time_to_sleep)
 	{
 		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
@@ -86,7 +86,7 @@ int		sleeping(t_ph *ph)
 	return (1);
 }
 
-void 	*safe_return(t_ph *ph)
+void	*safe_return(t_ph *ph)
 {
 	pthread_mutex_unlock(&ph->limit_check);
 	return (NULL);

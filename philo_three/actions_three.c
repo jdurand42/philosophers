@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:50:04 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/10 18:51:53 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 12:19:48 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,12 @@ void	*try_eating(void *ph2)
 
 void	eating(t_ph *ph)
 {
-	long	time;
-
 	ph->activity = EATING;
 	ft_print(ph);
 	gettimeofday(&ph->start, NULL);
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
-		while ((time = get_time(ph->start, ph->end)) < ph->data->time_to_die)
+		while ((get_time(ph->start, ph->end)) < ph->data->time_to_die)
 			gettimeofday(&ph->end, NULL);
 		sem_wait(ph->data->dead_lock);
 		sem_post(ph->data->forks);

@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 11:58:22 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 12:21:13 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,11 @@ void	*check_limit(void *data2)
 	sem_post(data->deads);
 	return (0);
 }
-// CHECK IF ANY PRINTF/EXIT lol
+
 void	prepare_sems(t_data *data)
 {
 	int	i;
 
-	//sem_wait(data->deads);
 	i = 0;
 	while (i < data->n_p)
 	{
@@ -57,7 +56,6 @@ int		safe_exit(t_data *data)
 	i = 0;
 	while (i < data->n_p)
 		pthread_join(data->ph[i++].thread, NULL);
-	printf("prout\n");
 	sem_unlink("/forks");
 	sem_unlink("/limit_sem");
 	sem_unlink("/deads");

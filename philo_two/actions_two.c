@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 11:52:39 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 12:21:38 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	*dying(t_ph *ph)
 	ph->data->over = 1;
 	sem_post(ph->data->deads);
 	sem_post(ph->data->dead_lock);
-	printf("bonjour\n");
 	return (0);
 }
 
@@ -36,14 +35,12 @@ void	*try_eating(void *ph2)
 
 void	eating(t_ph *ph)
 {
-	long	time;
-
 	ph->activity = EATING;
 	ft_print(ph);
 	gettimeofday(&ph->start, NULL);
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
-		while ((time = get_time(ph->start, ph->end)) < ph->data->time_to_die)
+		while ((get_time(ph->start, ph->end)) < ph->data->time_to_die)
 			gettimeofday(&ph->end, NULL);
 		sem_wait(ph->data->dead_lock);
 		sem_post(ph->data->forks);

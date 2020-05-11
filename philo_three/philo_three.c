@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:45:25 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/10 19:19:41 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 12:27:20 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	*check_limit(void *data2)
 		i++;
 	}
 	sem_post(data->deads);
+
 	return (0);
 }
 
@@ -38,7 +39,7 @@ void	prepare_sems(t_data *data)
 	while (i < data->n_p)
 	{
 		sem_wait(data->deads);
-		i++; /* A CHANGER ? */
+		i++;
 	}
 	i = 0;
 	while (i < data->n_p)
@@ -50,11 +51,6 @@ void	prepare_sems(t_data *data)
 
 void	safe_exit(t_data *data)
 {
-	sem_close(data->forks);
-	sem_close(data->deads);
-	sem_close(data->dead_lock);
-	sem_close(data->output);
-	//sem_close(data->limit_sem);
 	sem_unlink("/forks");
 	sem_unlink("/limit_sem");
 	sem_unlink("/deads");
@@ -69,6 +65,7 @@ void	forking(t_data *data)
 	int i;
 
 	i = 0;
+	gettimeofday(&data->time, NULL);
 	while (i < data->n_p)
 	{
 		if ((data->ph[i].pid = fork()) == 0)
@@ -101,12 +98,12 @@ int		main(int ac, char **av)
 		return (ft_error(2));
 	i = 0;
 	prepare_sems(&data);
-	gettimeofday(&data.time, NULL);
 	forking(&data);
 	while (1)
 	{
 		sem_wait(data.deads);
 		data.over = 1;
+		sem_wait(data.output);
 		while (i < data.n_p)
 		{
 			kill(data.ph[i].pid, SIGKILL);
