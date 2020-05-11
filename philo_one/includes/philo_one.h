@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 13:15:16 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 16:22:27 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,13 @@ typedef struct		s_ph
 	int				has_a_fork;
 	int				fork_priority_1;
 	int				fork_priority_2;
+	int				time_output;
+	int				activity_output;
+	int				has_a_fork_output;
 	pthread_mutex_t	forks;
 	pthread_mutex_t	limit_check;
 	pthread_t		thread;
+	pthread_t		output;
 	struct s_data	*data;
 	struct timeval	start;
 	struct timeval	end;
@@ -83,5 +87,7 @@ int					thinking(t_ph *ph);
 int					safe_exit(t_data *data);
 int					threading(t_data *data);
 void				*check_limit(t_data *data);
+
+void 				*ft_print_thread(void *ph);
 
 #endif

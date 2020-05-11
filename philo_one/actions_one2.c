@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 13:09:18 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 13:56:04 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 16:52:44 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	*safe_return(t_ph *ph)
 {
-	pthread_mutex_unlock(&ph->limit_check);
+	if (ph->limit < ph->data->limit)
+		pthread_mutex_unlock(&ph->limit_check);
 	return (NULL);
 }
 
@@ -44,5 +45,5 @@ void	*philo(void *b)
 			if (!sleeping(ph))
 				return (safe_return(ph));
 	}
-	return (NULL);
+	return (safe_return(ph));
 }

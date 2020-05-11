@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 13:56:05 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 16:42:13 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ void	*dying(t_ph *ph)
 	ph->activity = DEAD;
 	ft_print(ph);
 	ph->data->over = 1;
-	if (ph->limit <= ph->data->limit)
+
+//	if (ph->activity == DEAD)
+//		pthread_join(ph->output, NULL);
+	if (ph->limit < ph->data->limit)
 		pthread_mutex_unlock(&ph->limit_check);
 	pthread_mutex_unlock(&ph->data->dead_lock);
 	return (0);

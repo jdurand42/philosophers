@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:52:01 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 13:54:31 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/05/11 16:39:05 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,45 @@
 
 void	ft_print(t_ph *ph)
 {
-	char			*b;
-
 	if (ph->data->over == 1)
 		return ;
-	pthread_mutex_lock(&ph->data->output);
-	b = ft_itoa(get_time(ph->data->time, ph->end));
+	ph->time_output = get_time(ph->data->time, ph->end);
+	ph->activity_output = ph->activity;
+	ph->has_a_fork_output = ph->has_a_fork;
+	if ((pthread_create(&ph->output, NULL, ft_print_thread,
+	(void*)ph)) != 0)
+		return ;
+}
+
+void	*ft_print_thread(void *ph)
+{
+	char	*b;
+
+	if (((t_ph*)(ph))->data->over == 1 && ((t_ph*)(ph))->activity != DEAD)
+	{
+		return (NULL);
+	}
+	pthread_mutex_lock(&((t_ph*)(ph))->data->output);
+	b = ft_itoa(((t_ph*)(ph))->time_output);
 	ft_putstr(b);
 	free(b);
 	ft_putstr(" ms: ");
-	b = ft_itoa(ph->n + 1);
+	b = ft_itoa(((t_ph*)(ph))->n + 1);
 	ft_putstr(b);
 	free(b);
-	if (ph->activity == THINKING && ph->has_a_fork == 0)
+	if (((t_ph*)(ph))->activity_output == THINKING && ((t_ph*)(ph))->has_a_fork_output == 0)
 		ft_putstr(" is THINKING\n");
-	else if (ph->activity == EATING)
+	else if (((t_ph*)(ph))->activity_output == EATING)
 		ft_putstr(" is EATING\n");
-	else if (ph->activity == SLEEPING)
+	else if (((t_ph*)(ph))->activity_output == SLEEPING)
 		ft_putstr(" is SLEEPING\n");
-	else if (ph->activity == DEAD)
+	else if (((t_ph*)(ph))->activity_output == DEAD)
 		ft_putstr(" has died\n");
-	else if (ph->activity == THINKING && ph->has_a_fork == 1)
+	else if (((t_ph*)(ph))->activity_output == THINKING &&
+	((t_ph*)(ph))->has_a_fork_output == 1)
 		ft_putstr(" has taken a fork\n");
-	pthread_mutex_unlock(&ph->data->output);
+	pthread_mutex_unlock(&((t_ph*)(ph))->data->output);
+	return (NULL);
 }
 
 long	get_time(struct timeval ini, struct timeval now)
