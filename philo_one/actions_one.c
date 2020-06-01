@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 16:42:13 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/01 18:04:53 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	*dying(t_ph *ph)
 {
-	ph->activity = DEAD;
-	ft_print(ph);
+//	ph->activity = DEAD;
+	ft_print(ph, DEAD);
 	ph->data->over = 1;
 
 //	if (ph->activity == DEAD)
@@ -30,19 +30,20 @@ void	*try_eating(void *ph2)
 {
 	pthread_mutex_lock(
 	&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_1].forks);
+	ft_print((t_ph*)ph2, FORK);
 	pthread_mutex_lock(
 	&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_2].forks);
-	((t_ph*)(ph2))->has_a_fork = 1;
-	ft_print((t_ph*)ph2);
-	ft_print((t_ph*)ph2);
+	//((t_ph*)(ph2))->has_a_fork = 1;
+
+	ft_print((t_ph*)ph2, FORK);
 	((t_ph*)(ph2))->started_eating = 1;
 	return (0);
 }
 
 void	eating(t_ph *ph)
 {
-	ph->activity = EATING;
-	ft_print(ph);
+	//ph->activity = EATING;
+	ft_print(ph, EATING);
 	gettimeofday(&ph->start, NULL);
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
@@ -59,9 +60,9 @@ void	eating(t_ph *ph)
 		gettimeofday(&ph->end, NULL);
 	pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_1].forks);
 	pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_2].forks);
-	ph->has_a_fork = 0;
-	ph->activity = SLEEPING;
-	ft_print(ph);
+	//ph->has_a_fork = 0;
+	//ph->activity = SLEEPING;
+	ft_print(ph, SLEEPING);
 	ph->started_eating = 0;
 }
 
@@ -84,24 +85,29 @@ int		sleeping(t_ph *ph)
 		}
 		gettimeofday(&ph->end, NULL);
 	}
-	ph->activity = THINKING;
-	ft_print(ph);
+	//ph->activity = THINKING;
+	ft_print(ph, THINKING);
 	return (1);
 }
 
 int		thinking(t_ph *ph)
 {
-	if (ph->started_eating == 1)
+	while (1)
 	{
-		eating(ph);
-		return (1);
-	}
-	else if (ph->started_eating == 0 &&
-	get_time(ph->start, ph->end) >= ph->data->time_to_die)
-	{
-		pthread_mutex_lock(&ph->data->dead_lock);
-		dying(ph);
-		return (0);
+		gettimeofday(&ph->end, NULL);
+		if (ph->started_eating == 1)
+		{
+			//pthread_join(ph->eating_thread, NULL);
+			eating(ph);
+			return (1);
+		}
+		else if (ph->started_eating == 0 &&
+		get_time(ph->start, ph->end) >= ph->data->time_to_die)
+		{
+			pthread_mutex_lock(&ph->data->dead_lock);
+			dying(ph);
+			return (0);
+		}
 	}
 	return (0);
 }

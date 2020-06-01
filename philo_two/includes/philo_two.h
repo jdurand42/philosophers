@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:40 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 14:36:46 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/01 18:12:22 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define EATING 2
 # define SLEEPING 4
 # define DEAD 8
+# define FORK 16
 # define TIME 1000
 
 typedef	struct		s_data
@@ -57,14 +58,25 @@ typedef struct		s_ph
 	int				started_eating;
 	int				fork;
 	pthread_t		thread;
+	pthread_t		output;
 	struct s_data	*data;
 	struct timeval	start;
 	struct timeval	end;
 }					t_ph;
 
+typedef struct s_output
+{
+	int		activity;
+	int		n;
+	int		over;
+	int		time_output;
+	sem_t	*output;
+}				t_output;
+
 void				*philo(void *b);
 long				get_time(struct timeval ini, struct timeval now);
-void				ft_print(t_ph *ph);
+void				ft_print(t_ph *ph, int activity);
+void				*ft_print_thread(void *output);
 int					ft_atoi(char const *str);
 void				ft_putstr(char *s);
 char				*ft_itoa(int n);

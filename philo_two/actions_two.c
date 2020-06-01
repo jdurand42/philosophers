@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 14:12:59 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/01 18:20:25 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	*dying(t_ph *ph)
 {
 	gettimeofday(&ph->end, NULL);
-	ph->activity = DEAD;
-	ft_print(ph);
+	//ph->activity = DEAD;
+	ft_print(ph, DEAD);
 	ph->data->over = 1;
 	sem_post(ph->data->deads);
 	sem_post(ph->data->dead_lock);
@@ -27,17 +27,17 @@ void	*try_eating(void *ph2)
 {
 	sem_wait(((t_ph*)(ph2))->data->forks);
 	sem_wait(((t_ph*)(ph2))->data->forks);
-	((t_ph*)(ph2))->fork = 1;
-	ft_print((t_ph*)ph2);
-	ft_print((t_ph*)ph2);
+	//((t_ph*)(ph2))->fork = 1;
+	ft_print((t_ph*)ph2, FORK);
+	ft_print((t_ph*)ph2, FORK);
 	((t_ph*)(ph2))->started_eating = 1;
 	return (0);
 }
 
 void	eating(t_ph *ph)
 {
-	ph->activity = EATING;
-	ft_print(ph);
+	//ph->activity = EATING;
+	ft_print(ph, EATING);
 	gettimeofday(&ph->start, NULL);
 	if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
@@ -56,10 +56,10 @@ void	eating(t_ph *ph)
 	ph->limit += 1;
 	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
 		sem_post(ph->data->limit_sem);
-	ph->fork = 0;
+	//ph->fork = 0;
 	ph->started_eating = 0;
-	ph->activity = SLEEPING;
-	ft_print(ph);
+	//ph->activity = SLEEPING;
+	ft_print(ph, SLEEPING);
 }
 
 int		sleeping(t_ph *ph)
@@ -78,13 +78,14 @@ int		sleeping(t_ph *ph)
 		}
 		gettimeofday(&ph->end, NULL);
 	}
-	ph->activity = THINKING;
-	ft_print(ph);
+	//ph->activity = THINKING;
+	ft_print(ph, THINKING);
 	return (1);
 }
 
 int		thinking(t_ph *ph)
 {
+	gettimeofday(&ph->end, NULL);
 	if (ph->started_eating == 1)
 	{
 		eating(ph);

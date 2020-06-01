@@ -6,52 +6,54 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:52:01 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 16:39:05 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/01 16:50:25 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/philo_one.h"
 
-void	ft_print(t_ph *ph)
+void	ft_print(t_ph *ph, int activity)
 {
+	t_output	*output;
+
+	if (!(output = (t_output*)malloc(sizeof(t_output))))
+		return ;
+	output->n = ph->n;
+	output->activity = activity;
+	output->over = ph->data->over;
+	output->time_output = get_time(ph->data->time, ph->end);
+	output->output = &ph->data->output;
 	if (ph->data->over == 1)
 		return ;
-	ph->time_output = get_time(ph->data->time, ph->end);
-	ph->activity_output = ph->activity;
-	ph->has_a_fork_output = ph->has_a_fork;
 	if ((pthread_create(&ph->output, NULL, ft_print_thread,
-	(void*)ph)) != 0)
+	(void*)output)) != 0)
 		return ;
 }
 
-void	*ft_print_thread(void *ph)
+void	*ft_print_thread(void *output)
 {
 	char	*b;
 
-	if (((t_ph*)(ph))->data->over == 1 && ((t_ph*)(ph))->activity != DEAD)
-	{
-		return (NULL);
-	}
-	pthread_mutex_lock(&((t_ph*)(ph))->data->output);
-	b = ft_itoa(((t_ph*)(ph))->time_output);
+	pthread_mutex_lock(((t_output*)(output))->output);
+	b = ft_itoa(((t_output*)(output))->time_output);
 	ft_putstr(b);
 	free(b);
 	ft_putstr(" ms: ");
-	b = ft_itoa(((t_ph*)(ph))->n + 1);
+	b = ft_itoa(((t_output*)(output))->n + 1);
 	ft_putstr(b);
 	free(b);
-	if (((t_ph*)(ph))->activity_output == THINKING && ((t_ph*)(ph))->has_a_fork_output == 0)
+	if (((t_output*)(output))->activity == THINKING)
 		ft_putstr(" is THINKING\n");
-	else if (((t_ph*)(ph))->activity_output == EATING)
+	else if (((t_output*)(output))->activity == EATING)
 		ft_putstr(" is EATING\n");
-	else if (((t_ph*)(ph))->activity_output == SLEEPING)
+	else if (((t_output*)(output))->activity == SLEEPING)
 		ft_putstr(" is SLEEPING\n");
-	else if (((t_ph*)(ph))->activity_output == DEAD)
+	else if (((t_output*)(output))->activity == DEAD)
 		ft_putstr(" has died\n");
-	else if (((t_ph*)(ph))->activity_output == THINKING &&
-	((t_ph*)(ph))->has_a_fork_output == 1)
+	else if (((t_output*)(output))->activity == FORK)
 		ft_putstr(" has taken a fork\n");
-	pthread_mutex_unlock(&((t_ph*)(ph))->data->output);
+	pthread_mutex_unlock(((t_output*)(output))->output);
+	free(output);
 	return (NULL);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 13:09:18 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 16:52:44 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/01 16:58:20 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	*safe_return(t_ph *ph)
 
 void	*philo(void *b)
 {
-	pthread_t	eating_thread;
 	t_ph		*ph;
 
 	ph = (t_ph*)b;
@@ -29,21 +28,16 @@ void	*philo(void *b)
 	gettimeofday(&ph->end, NULL);
 	while (ph->data->over == 0)
 	{
-		pthread_create(&eating_thread, NULL, try_eating, (void*)ph);
-		if (ph->activity == THINKING)
+		pthread_create(&ph->eating_thread, NULL, try_eating, (void*)ph);
+		while (1)
 		{
-			while (1)
-			{
-				gettimeofday(&ph->end, NULL);
-				if (thinking(ph))
-					break ;
-				if (ph->data->over == 1)
-					return (safe_return(ph));
-			}
-		}
-		if (ph->activity == SLEEPING)
-			if (!sleeping(ph))
+			if (thinking(ph))
+				break ;
+			if (ph->data->over == 1)
 				return (safe_return(ph));
+		}
+		if (!sleeping(ph))
+			return (safe_return(ph));
 	}
 	return (safe_return(ph));
 }
