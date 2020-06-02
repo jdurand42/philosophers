@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 18:08:23 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:39:26 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,6 @@ int		threading(t_data *data)
 	int i;
 
 	i = 0;
-	//gettimeofday(&data->time, NULL);
-	/*if (data->limit > 0)
-		if (pthread_create(&data->limit_thread, NULL, check_limit,
-		(void*)data) != 0)
-			return (0);*/
 	while (i < data->n_p)
 	{
 		if (pthread_create(&data->ph[i].thread, NULL, philo,
