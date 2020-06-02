@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 18:47:17 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:54:48 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,16 @@ int		safe_exit(t_data *data)
 	//i = 0;
 	/*while (i < data->n_p)
 		pthread_join(data->ph[i++].thread, NULL);*/
-	/*sem_unlink("/forks");
+	sem_close(data->forks);
+	sem_close(data->deads);
+	sem_close(data->dead_lock);
+	sem_close(data->output);
+	sem_close(data->limit_sem);
+	sem_unlink("/forks");
 	sem_unlink("/limit_sem");
 	sem_unlink("/deads");
 	sem_unlink("/dead_lock");
-	sem_unlink("/output");*/
+	sem_unlink("/output");
 	free(data->ph);
 	return (0);
 }

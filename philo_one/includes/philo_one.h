@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 16:35:44 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:51:33 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,8 @@ typedef struct		s_ph
 	int				i;
 	int				limit;
 	int				started_eating;
-	int				has_a_fork;
 	int				fork_priority_1;
 	int				fork_priority_2;
-	int				time_output;
-	int				activity_output;
-	int				has_a_fork_output;
 	pthread_mutex_t	forks;
 	pthread_mutex_t	limit_check;
 	pthread_t		thread;
