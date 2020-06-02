@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 16:30:07 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 16:56:26 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	eating(t_ph *ph)
 {
 	ft_print(ph, EATING);
 	gettimeofday(&ph->start, NULL);
-	if (ph->data->time_to_eat >= ph->data->time_to_die)
+	/*if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
 		while ((get_time(ph->start, ph->end)) < ph->data->time_to_die)
 			gettimeofday(&ph->end, NULL);
@@ -45,7 +45,7 @@ void	eating(t_ph *ph)
 		sem_post(ph->data->forks);
 		dying(ph);
 		return ;
-	}
+	}*/
 	while (get_time(ph->start, ph->end) < ph->data->time_to_eat)
 		gettimeofday(&ph->end, NULL);
 	sem_post(ph->data->forks);
@@ -53,7 +53,6 @@ void	eating(t_ph *ph)
 	ph->limit += 1;
 	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
 		sem_post(ph->data->limit_sem);
-	ph->started_eating = 0;
 	ft_print(ph, SLEEPING);
 }
 
@@ -65,6 +64,7 @@ int		sleeping(t_ph *ph)
 	gettimeofday(&ph->start_sleep, NULL);
 	while (!gettimeofday(&ph->end, NULL) && get_time(ph->start_sleep, ph->end) < ph->data->time_to_sleep)
 	{
+		ph->started_eating = 0;
 		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
 		{
 			sem_wait(ph->data->dead_lock);

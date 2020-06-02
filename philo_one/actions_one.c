@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 13:43:28 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 16:57:49 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	eating(t_ph *ph)
 	//ph->activity = EATING;
 	ft_print(ph, EATING);
 	gettimeofday(&ph->start, NULL);
-	if (ph->data->time_to_eat >= ph->data->time_to_die)
+	/*if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
 		while ((get_time(ph->start, ph->end)) < ph->data->time_to_die)
 			gettimeofday(&ph->end, NULL);
@@ -54,7 +54,7 @@ void	eating(t_ph *ph)
 		pthread_mutex_unlock(&ph->limit_check);
 		dying(ph);
 		return ;
-	}
+	}*/
 	while (get_time(ph->start, ph->end) < ph->data->time_to_eat)
 		gettimeofday(&ph->end, NULL);
 	pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_1].forks);
@@ -62,9 +62,9 @@ void	eating(t_ph *ph)
 	//ph->has_a_fork = 0;
 	//ph->activity = SLEEPING;
 	ft_print(ph, SLEEPING);
-	ph->started_eating = 0;
+	ph->limit += 1;
 }
-
+/*
 int		sleeping(t_ph *ph)
 {
 	struct timeval	start_sleep;
@@ -109,4 +109,40 @@ int		thinking(t_ph *ph)
 		}
 	}
 	return (0);
+}
+*/int		sleeping(t_ph *ph)
+{
+	//struct timeval	start_sleep;
+
+	//gettimeofday(&ph->end, NULL);
+	gettimeofday(&ph->start_sleep, NULL);
+	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
+		pthread_mutex_unlock(&ph->limit_check);
+	while (!gettimeofday(&ph->end, NULL) && get_time(ph->start_sleep, ph->end) < ph->data->time_to_sleep)
+	{
+		ph->started_eating = 0;
+		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
+		{
+			pthread_mutex_lock(&ph->data->dead_lock);
+			dying(ph);
+			return (0);
+		}
+	}
+	ft_print(ph, THINKING);
+	return (1);
+}
+
+int		thinking(t_ph *ph)
+{
+	while (!ph->started_eating && !gettimeofday(&ph->end, NULL))
+	{
+		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
+		{
+			pthread_mutex_lock(&ph->data->dead_lock);
+			dying(ph);
+			return (0);
+		}
+	}
+	eating(ph);
+	return (1);
 }
