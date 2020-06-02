@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 13:28:38 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/01 18:23:50 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 23:07:12 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	*philo(t_ph *b)
 		pthread_create(&eating_thread, NULL, try_eating, (void*)ph);
 	//	if (ph->activity == THINKING)
 	//	{
+			pthread_detach(ph->eating_thread);
 			while (1)
 			{
 				if (thinking(ph))
