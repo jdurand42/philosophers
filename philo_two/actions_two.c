@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:21:59 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:47:11 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int		sleeping(t_ph *ph)
 		}
 		//gettimeofday(&ph->end, NULL);
 	}
+	pthread_create(&ph->eating_thread, NULL, try_eating, (void*)ph);
 	ft_print(ph, THINKING);
 	return (1);
 }

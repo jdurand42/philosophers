@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:40 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 16:29:48 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:46:55 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct		s_ph
 	int				fork;
 	pthread_t		thread;
 	pthread_t		output;
+	pthread_t		eating_thread;
 	struct s_data	*data;
 	struct timeval	start;
 	struct timeval	end;

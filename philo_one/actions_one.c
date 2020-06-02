@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:19:30 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:28:10 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,13 @@ void	*try_eating(void *ph2)
 	((t_ph*)(ph2))->started_eating = 1;
 	ft_print((t_ph*)ph2, FORK);
 	ft_print((t_ph*)ph2, FORK);
-
+	ft_print((t_ph*)ph2, EATING);
 	return (0);
 }
 
 void	eating(t_ph *ph)
 {
 	//ph->activity = EATING;
-	ft_print(ph, EATING);
 	gettimeofday(&ph->start, NULL);
 	/*if (ph->data->time_to_eat >= ph->data->time_to_die)
 	{
