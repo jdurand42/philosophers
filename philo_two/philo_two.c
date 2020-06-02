@@ -6,30 +6,11 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 18:54:48 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:58:52 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/philo_two.h"
-
-/*void	*check_limit(void *data2)
-{
-	t_data	*data;
-	int		i;
-
-	i = 0;
-	data = (t_data*)data2;
-	while (i < data->n_p)
-	{
-		if (data->over == 1)
-			return (0);
-		sem_wait(data->limit_sem);
-		i++;
-	}
-	data->over = 1;
-	sem_post(data->deads);
-	return (0);
-}*/
 
 void	*check_limit(t_data *data)
 {

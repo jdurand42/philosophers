@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 18:44:04 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 19:09:43 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void	*dying(t_ph *ph)
 
 void	*try_eating(void *ph2)
 {
-	sem_wait(((t_ph*)(ph2))->data->forks);
-	sem_wait(((t_ph*)(ph2))->data->forks);
+	if (sem_wait(((t_ph*)(ph2))->data->forks))
+		printf("merde 1\n");
+	if (sem_wait(((t_ph*)(ph2))->data->forks))
+		printf("merde 2\n");
 	((t_ph*)(ph2))->started_eating = 1;
 	ft_print((t_ph*)ph2, FORK);
 	ft_print((t_ph*)ph2, FORK);
@@ -40,8 +42,10 @@ void	eating(t_ph *ph)
 	gettimeofday(&ph->start, NULL);
 	while (get_time(ph->start, ph->end) < ph->data->time_to_eat)
 		gettimeofday(&ph->end, NULL);
-	sem_post(ph->data->forks);
-	sem_post(ph->data->forks);
+	if (sem_post(ph->data->forks))
+		printf("GROSSE merde 1\n");
+	if (sem_post(ph->data->forks))
+		printf("GROSSE merde 2\n");
 	ft_print(ph, SLEEPING);
 	ph->limit += 1;
 }
