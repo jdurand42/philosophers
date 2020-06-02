@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 13:42:19 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 16:08:46 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ int		sleeping(t_ph *ph)
 {
 	struct timeval	start_sleep;
 
-	gettimeofday(&ph->end, NULL);
+	//gettimeofday(&ph->end, NULL);
 	gettimeofday(&start_sleep, NULL);
-	while ((get_time(start_sleep, ph->end)) < ph->data->time_to_sleep)
+	while (gettimeofday(&ph->end, NULL) && get_time(start_sleep, ph->end) < ph->data->time_to_sleep)
 	{
 		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
 		{
@@ -71,7 +71,7 @@ int		sleeping(t_ph *ph)
 			dying(ph);
 			return (0);
 		}
-		gettimeofday(&ph->end, NULL);
+		//gettimeofday(&ph->end, NULL);
 	}
 	ft_print(ph, THINKING);
 	return (1);
