@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 13:38:17 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 18:42:18 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 20:43:09 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ void	*philo(void *b)
 		pthread_create(&ph->eating_thread, NULL, try_eating, (void*)ph);
 		while (!ph->started_eating && !gettimeofday(&ph->end, NULL))
 		{
-			if (get_time(ph->start, ph->end) >= ph->data->time_to_die)
+			if (get_time(ph->start, ph->end) >= ph->data->time_to_die &&
+			ph->started_eating == 0)
 			{
 				sem_wait(ph->data->dead_lock);
 				dying(ph);
