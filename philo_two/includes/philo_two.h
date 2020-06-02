@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:40 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/01 18:12:22 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 13:10:42 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,12 @@ typedef struct		s_ph
 typedef struct s_output
 {
 	int		activity;
-	int		n;
-	int		over;
+	t_ph	*ph;
+	//int		n;
+	//int		over;
 	int		time_output;
-	sem_t	*output;
+
+	//sem_t	*output;
 }				t_output;
 
 void				*philo(void *b);

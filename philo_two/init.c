@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:20:05 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 13:55:38 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 13:15:24 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,8 @@ t_ph	*ft_init_ph(t_data *data)
 	while (i < data->n_p)
 	{
 		ph[i].n = i;
-		ph[i].i = 0;
-		ph[i].activity = THINKING;
 		ph[i].limit = 0;
 		ph[i].data = data;
-		ph[i].fork = 0;
 		ph[i].started_eating = 0;
 		i++;
 	}
