@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 18:10:19 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:36:50 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	*dying(t_ph *ph)
 	ft_print(ph, DEAD);
 	ph->data->over = 1;
 	sem_post(ph->data->deads);
-	if (ph->limit < ph->data->limit)
-		sem_post(ph->data->limit_sem);
+	/*if (ph->limit < ph->data->limit)
+		sem_post(ph->data->limit_sem);*/
 	sem_post(ph->data->dead_lock);
 	return (0);
 }
@@ -53,7 +53,7 @@ void	eating(t_ph *ph)
 	sem_post(ph->data->forks);
 	sem_post(ph->data->forks);
 	ft_print(ph, SLEEPING);
-	ph->limit += 1;
+//	ph->limit += 1;
 }
 
 int		sleeping(t_ph *ph)
@@ -62,8 +62,8 @@ int		sleeping(t_ph *ph)
 
 	//gettimeofday(&ph->end, NULL);
 	gettimeofday(&ph->start_sleep, NULL);
-	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
-		sem_post(ph->data->limit_sem);
+/*	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
+		sem_post(ph->data->limit_sem);*/
 	while (!gettimeofday(&ph->end, NULL) &&
 	get_time(ph->start_sleep, ph->end) < ph->data->time_to_sleep)
 	{

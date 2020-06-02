@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 13:38:17 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:56:32 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:37:23 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	*safe_return(t_ph *ph)
 {
-	if (ph->limit < ph->data->limit)
-		sem_post(ph->data->limit_sem);
+	/*if (ph->limit < ph->data->limit)
+		sem_post(ph->data->limit_sem);*/
+	(void)ph;
 	return (NULL);
 }
 
