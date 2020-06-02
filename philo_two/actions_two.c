@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 19:51:02 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 20:48:26 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	*try_eating(void *ph2)
 void	eating(t_ph *ph)
 {
 	gettimeofday(&ph->start, NULL);
+	gettimeofday(&ph->end, NULL);
 	while (get_time(ph->start, ph->end) < ph->data->time_to_eat)
 		gettimeofday(&ph->end, NULL);
 	sem_post(ph->data->forks);
