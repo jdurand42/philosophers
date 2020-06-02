@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:47:11 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:59:18 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	*dying(t_ph *ph)
 	ph->data->over = 1;
 	sem_post(ph->data->deads);
 	sem_post(ph->data->dead_lock);
+	if (ph->limit < ph->data->limit)
+		sem_post(ph->data->limit_sem);
 	return (0);
 }
 

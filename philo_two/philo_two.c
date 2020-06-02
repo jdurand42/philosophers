@@ -6,13 +6,13 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 13:59:51 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:01:16 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/philo_two.h"
 
-void	*check_limit(void *data2)
+/*void	*check_limit(void *data2)
 {
 	t_data	*data;
 	int		i;
@@ -28,6 +28,20 @@ void	*check_limit(void *data2)
 	}
 	data->over = 1;
 	sem_post(data->deads);
+	return (0);
+}*/
+
+void	*check_limit(t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->n_p && data->over == 0)
+	{
+		sem_wait(data->limit_sem);
+		i++;
+	}
+	data->over = 1;
 	return (0);
 }
 
@@ -51,11 +65,11 @@ void	prepare_sems(t_data *data)
 
 int		safe_exit(t_data *data)
 {
-	int i;
+	//int i;
 
-	i = 0;
-	while (i < data->n_p)
-		pthread_join(data->ph[i++].thread, NULL);
+	//i = 0;
+	/*while (i < data->n_p)
+		pthread_join(data->ph[i++].thread, NULL);*/
 	sem_unlink("/forks");
 	sem_unlink("/limit_sem");
 	sem_unlink("/deads");
@@ -71,10 +85,10 @@ int		threading(t_data *data)
 
 	i = 0;
 	gettimeofday(&data->time, NULL);
-	if (data->limit > 0)
+	/*if (data->limit > 0)
 		if (pthread_create(&data->limit_thread, NULL, check_limit,
 		(void*)data) != 0)
-			return (0);
+			return (0);*/
 	while (i < data->n_p)
 	{
 		if (pthread_create(&data->ph[i].thread, NULL, philo,
@@ -100,11 +114,18 @@ int		main(int ac, char **av)
 	prepare_sems(&data);
 	if (!threading(&data))
 		return (safe_exit(&data));
-	while (1)
+	if (data.limit > 0)
+		check_limit(&data);
+	while (i < data.n_p)
+	{
+		pthread_join(data.ph[i].thread, NULL);
+		i++;
+	}
+	/*while (1)
 	{
 		sem_wait(data.deads);
 		return (safe_exit(&data));
-	}
+	}*/
 	safe_exit(&data);
 	return (0);
 }

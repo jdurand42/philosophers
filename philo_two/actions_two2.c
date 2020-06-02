@@ -6,11 +6,19 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 13:38:17 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:47:13 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:56:32 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/philo_two.h"
+
+void	*safe_return(t_ph *ph)
+{
+	if (ph->limit < ph->data->limit)
+		sem_post(ph->data->limit_sem);
+	return (NULL);
+}
+
 
 void	*philo(void *b)
 {
@@ -28,12 +36,12 @@ void	*philo(void *b)
 			{
 				sem_wait(ph->data->dead_lock);
 				dying(ph);
-				return (NULL);
+				return (safe_return(ph));
 			}
 		}
 		eating(ph);
 		if (!sleeping(ph))
-			return (NULL);
+			return (safe_return(ph));
 	}
-	return (NULL);
+	return (safe_return(ph));
 }

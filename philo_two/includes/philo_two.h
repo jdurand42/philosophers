@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:40 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:46:55 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:52:16 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void				*dying(t_ph *ph);
 void				*try_eating(void *ph2);
 void				eating(t_ph *ph);
 int					sleeping(t_ph *ph);
-void				*check_limit(void *data2);
+void				*check_limit(t_data *data);
 void				prepare_sems(t_data *data);
 int					safe_exit(t_data *data);
 int					threading(t_data *data);
