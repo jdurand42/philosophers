@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:40 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 13:10:42 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 16:29:48 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct		s_ph
 	struct s_data	*data;
 	struct timeval	start;
 	struct timeval	end;
+	struct timeval	start_sleep;
 }					t_ph;
 
 typedef struct s_output

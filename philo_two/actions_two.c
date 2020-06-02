@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 16:08:46 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 16:30:07 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ void	eating(t_ph *ph)
 
 int		sleeping(t_ph *ph)
 {
-	struct timeval	start_sleep;
+	//struct timeval	start_sleep;
 
 	//gettimeofday(&ph->end, NULL);
-	gettimeofday(&start_sleep, NULL);
-	while (gettimeofday(&ph->end, NULL) && get_time(start_sleep, ph->end) < ph->data->time_to_sleep)
+	gettimeofday(&ph->start_sleep, NULL);
+	while (!gettimeofday(&ph->end, NULL) && get_time(ph->start_sleep, ph->end) < ph->data->time_to_sleep)
 	{
 		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
 		{
@@ -79,6 +79,7 @@ int		sleeping(t_ph *ph)
 
 int		thinking(t_ph *ph)
 {
+	/*
 	gettimeofday(&ph->end, NULL);
 	if (ph->started_eating == 1)
 	{
@@ -91,6 +92,18 @@ int		thinking(t_ph *ph)
 		sem_wait(ph->data->dead_lock);
 		dying(ph);
 		return (0);
+	}*/
+	while (!ph->started_eating && !gettimeofday(&ph->end, NULL))
+	{
+					//printf("lol\n");
+		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
+		{
+			//printf("lol\n");
+			sem_wait(ph->data->dead_lock);
+			dying(ph);
+			return (0);
+		}
 	}
-	return (0);
+	eating(ph);
+	return (1);
 }
