@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 16:57:49 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:09:35 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,17 +132,17 @@ int		thinking(t_ph *ph)
 	return (1);
 }
 
-int		thinking(t_ph *ph)
-{
-	while (!ph->started_eating && !gettimeofday(&ph->end, NULL))
-	{
-		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
-		{
-			pthread_mutex_lock(&ph->data->dead_lock);
-			dying(ph);
-			return (0);
-		}
-	}
-	eating(ph);
-	return (1);
-}
+// int		thinking(t_ph *ph)
+// {
+	// while (!ph->started_eating && !gettimeofday(&ph->end, NULL))
+	// {
+		// if (get_time(ph->start, ph->end) > ph->data->time_to_die)
+		// {
+			// pthread_mutex_lock(&ph->data->dead_lock);
+			// dying(ph);
+			// return (0);
+		// }
+	// }
+	// eating(ph);
+	// return (1);
+// }

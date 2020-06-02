@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:52:01 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/01 16:50:25 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:05:13 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,13 @@ void	*ft_print_thread(void *output)
 
 long	get_time(struct timeval ini, struct timeval now)
 {
-	long seconds;
+	/*long seconds;
 	long micros;
 
 	seconds = (now.tv_sec - ini.tv_sec) * 1000;
-	micros = (now.tv_usec - (ini.tv_usec)) / 1000;
-	return (micros + seconds);
+	micros = (now.tv_usec - (ini.tv_usec)) / 1000;*/
+	return (((now.tv_sec - ini.tv_sec) * 1000) +
+	((now.tv_usec - (ini.tv_usec)) / 1000));
 }
 
 int		fork_priority_1(int n, int n_max)
