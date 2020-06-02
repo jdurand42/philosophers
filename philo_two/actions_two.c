@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:59:18 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:10:19 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	*dying(t_ph *ph)
 {
-	gettimeofday(&ph->end, NULL);
+	//gettimeofday(&ph->end, NULL);
 	ft_print(ph, DEAD);
 	ph->data->over = 1;
 	sem_post(ph->data->deads);
-	sem_post(ph->data->dead_lock);
 	if (ph->limit < ph->data->limit)
 		sem_post(ph->data->limit_sem);
+	sem_post(ph->data->dead_lock);
 	return (0);
 }
 

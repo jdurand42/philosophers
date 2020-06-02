@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:28:10 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 18:10:41 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ void	eating(t_ph *ph)
 		gettimeofday(&ph->end, NULL);
 	pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_1].forks);
 	pthread_mutex_unlock(&ph->data->ph[ph->fork_priority_2].forks);
-	//ph->has_a_fork = 0;
-	//ph->activity = SLEEPING;
 	ft_print(ph, SLEEPING);
 	ph->limit += 1;
 }
