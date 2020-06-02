@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/01 18:04:53 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 13:43:28 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,12 @@ void	*try_eating(void *ph2)
 {
 	pthread_mutex_lock(
 	&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_1].forks);
-	ft_print((t_ph*)ph2, FORK);
 	pthread_mutex_lock(
 	&((t_ph*)(ph2))->data->ph[((t_ph*)(ph2))->fork_priority_2].forks);
-	//((t_ph*)(ph2))->has_a_fork = 1;
-
-	ft_print((t_ph*)ph2, FORK);
 	((t_ph*)(ph2))->started_eating = 1;
+	ft_print((t_ph*)ph2, FORK);
+	ft_print((t_ph*)ph2, FORK);
+
 	return (0);
 }
 

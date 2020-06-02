@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:30 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 13:17:58 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 13:42:19 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	*try_eating(void *ph2)
 {
 	sem_wait(((t_ph*)(ph2))->data->forks);
 	sem_wait(((t_ph*)(ph2))->data->forks);
-	ft_print((t_ph*)ph2, FORK);
-	ft_print((t_ph*)ph2, FORK);
 	((t_ph*)(ph2))->started_eating = 1;
+	ft_print((t_ph*)ph2, FORK);
+	ft_print((t_ph*)ph2, FORK);
 	return (0);
 }
 
