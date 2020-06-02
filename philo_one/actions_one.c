@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 19:12:56 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 17:09:35 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/02 17:19:30 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,8 @@ int		thinking(t_ph *ph)
 	gettimeofday(&ph->start_sleep, NULL);
 	if (ph->data->limit > 0 && ph->limit == ph->data->limit)
 		pthread_mutex_unlock(&ph->limit_check);
-	while (!gettimeofday(&ph->end, NULL) && get_time(ph->start_sleep, ph->end) < ph->data->time_to_sleep)
+	while (!gettimeofday(&ph->end, NULL) &&
+	get_time(ph->start_sleep, ph->end) < ph->data->time_to_sleep)
 	{
 		ph->started_eating = 0;
 		if (get_time(ph->start, ph->end) > ph->data->time_to_die)
