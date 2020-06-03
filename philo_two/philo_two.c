@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:35:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 18:58:52 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/03 12:58:44 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,6 @@ void	prepare_sems(t_data *data)
 
 int		safe_exit(t_data *data)
 {
-	//int i;
-
-	//i = 0;
-	/*while (i < data->n_p)
-		pthread_join(data->ph[i++].thread, NULL);*/
 	sem_close(data->forks);
 	sem_close(data->deads);
 	sem_close(data->dead_lock);
@@ -103,11 +98,6 @@ int		main(int ac, char **av)
 		pthread_join(data.ph[i].thread, NULL);
 		i++;
 	}
-	/*while (1)
-	{
-		sem_wait(data.deads);
-		return (safe_exit(&data));
-	}*/
 	safe_exit(&data);
 	return (0);
 }

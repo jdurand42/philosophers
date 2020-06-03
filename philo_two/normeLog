@@ -2,11 +2,13 @@ Norme: ./Makefile
 Warning: Not a valid file
 Norme: ./normeLog
 Warning: Not a valid file
+Norme: ./philo_two
+Warning: Not a valid file
 Norme: ./commons2.c
 Norme: ./init.c
-Error: global scope bad aligned
 Norme: ./commons.c
+Norme: ./includes/philo_two.h
+Norme: ./actions_two2.c
 Norme: ./utils.c
 Norme: ./actions_two.c
-Error (line 85): function philo has 35 lines
 Norme: ./philo_two.c

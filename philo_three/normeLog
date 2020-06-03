@@ -5,7 +5,8 @@ Warning: Not a valid file
 Norme: ./commons2.c
 Norme: ./philo_three.c
 Norme: ./init.c
+Norme: ./actions_three2.c
 Norme: ./commons.c
+Norme: ./includes/philo_three.h
 Norme: ./utils.c
 Norme: ./actions_three.c
-Error (line 83): function philo has 33 lines

@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 02:00:33 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 18:51:33 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/03 12:55:55 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ typedef	struct		s_data
 
 typedef struct		s_ph
 {
-//	int				activity;
 	int				n;
 	int				i;
 	int				limit;
@@ -64,14 +63,14 @@ typedef struct		s_ph
 	struct timeval	start_sleep;
 }					t_ph;
 
-typedef struct s_output
+typedef struct		s_output
 {
-	int	activity;
-	int	n;
-	int	over;
-	int	time_output;
-	pthread_mutex_t *output;
-}				t_output;
+	int				activity;
+	int				n;
+	int				over;
+	int				time_output;
+	pthread_mutex_t	*output;
+}					t_output;
 
 void				*philo(void *ph);
 long				get_time(struct timeval ini, struct timeval now);
@@ -91,11 +90,9 @@ void				*dying(t_ph *ph);
 void				*try_eating(void *ph2);
 void				eating(t_ph *ph);
 int					sleeping(t_ph *ph);
-int					thinking(t_ph *ph);
 int					safe_exit(t_data *data);
 int					threading(t_data *data);
 void				*check_limit(t_data *data);
-
-void 				*ft_print_thread(void *ph);
+void				*ft_print_thread(void *ph);
 
 #endif

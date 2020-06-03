@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/11 13:38:17 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/02 23:07:26 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/03 12:56:47 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	*safe_return(t_ph *ph)
 		sem_post(ph->data->limit_sem);
 	return (NULL);
 }
-
 
 void	*philo(void *b)
 {
