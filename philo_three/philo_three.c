@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:45:25 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/05/11 14:00:48 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/03 13:59:15 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int		main(int ac, char **av)
 	{
 		sem_wait(data.deads);
 		data.over = 1;
+		//usleep(100000);
 		while (i < data.n_p)
 			kill(data.ph[i++].pid, SIGKILL);
 		break ;
