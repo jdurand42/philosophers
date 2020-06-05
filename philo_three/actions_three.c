@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:50:04 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/03 16:06:12 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/05 13:07:12 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	*dying(t_ph *ph)
 {
 	ft_print(ph, DEAD);
-//	sem_post(ph->data->deads);
 	sem_wait(ph->data->output);
 	exit(0);
 }

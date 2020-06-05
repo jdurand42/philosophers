@@ -6,7 +6,7 @@
 /*   By: jeromedu <jeromedu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/10 18:44:15 by jeromedu          #+#    #+#             */
-/*   Updated: 2020/06/03 16:08:43 by jeromedurand     ###   ########.fr       */
+/*   Updated: 2020/06/05 13:06:46 by jeromedurand     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ void	ft_print(t_ph *ph, int activity)
 {
 	t_output	*output;
 
-/*	if (ph->data->over == 1)
-		return ;*/
 	if (!(output = (t_output*)malloc(sizeof(t_output))))
 		return ;
 	output->activity = activity;
